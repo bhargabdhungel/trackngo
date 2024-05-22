@@ -2,14 +2,12 @@
 import { redirect } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import ModeToggle from "@/components/toggle-theme";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage(): JSX.Element {
   const { loading, user, signIn, signOut } = useAuth();
 
   if (!loading && user) {
-    redirect("/dashboard");
+    redirect("/home");
   }
 
   return (
