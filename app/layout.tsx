@@ -21,16 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <Providers>
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >
-          {children}
-        </body>
-      </Providers>
+      <body
+        className={cn(
+          "min-h-screen bg-background text-foreground font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

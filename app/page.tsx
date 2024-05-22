@@ -3,18 +3,30 @@ import { redirect } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import ModeToggle from "@/components/toggle-theme";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage(): JSX.Element {
   const { loading, user, signIn, signOut } = useAuth();
-  if (loading) return <div>loading...</div>;
-  if (user) {
-    redirect("/user");
+
+  if (!loading && user) {
+    redirect("/dashboard");
   }
+
   return (
-    <div>
-      <div>hello world</div>
-      <Button onClick={signIn}>Sign In</Button>
-      <ModeToggle />
+    <div className="flex justify-center items-center h-screen">
+      <div className="flex flex-col items-center">
+        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight animate-scaleUp">
+          TrackNGo
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6 animate-moveUp">
+          Easy and Fast Tracking of Vehicles
+        </p>
+        {!loading && (
+          <Button onClick={signIn} className="mt-8">
+            Sign In with Google
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
