@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BusDocumentType {
+  REGISTRATION
+  INSURANCE
+  PERMIT
+  FITNESS
+  POLLUTION
+  ROAD_TAX
+}
+
+enum DriverDocumentType {
+  DRIVING_LICENSE
+  AADHAR_CARD
+  PAN_CARD
+  VOTER_ID
+  DATE_OF_BIRTH
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+  buses Bus[]
+}
+
+model Bus {
+  id        Int           @id @default(autoincrement())
+  name      String        @unique
+  userId    Int
+  user      User          @relation(fields: [userId], references: [id])
+  documents BusDocument[]
+  trips     Trip[]
+}
+
+model Driver {
+  id        Int              @id @default(autoincrement())
+  name      String
+  documents DriverDocument[]
+  trips     Trip[]
+}
+
+model BusDocument {
+  id         Int             @id @default(autoincrement())
+  busId      Int
+  bus        Bus             @relation(fields: [busId], references: [id])
+  type       BusDocumentType
+  link       String
+  expiryDate DateTime
+}
+
+model DriverDocument {
+  id       Int                @id @default(autoincrement())
+  driverId Int
+  driver   Driver             @relation(fields: [driverId], references: [id])
+  type     DriverDocumentType
+  link     String
+}
+
+model Trip {
+  id              Int      @id @default(autoincrement())
+  busId           Int
+  bus             Bus      @relation(fields: [busId], references: [id])
+  driverId        Int
+  driver          Driver   @relation(fields: [driverId], references: [id])
+  routeFrom       String
+  routeTo         String
+  startTime       DateTime
+  endTime         DateTime
+  fare            Int
+  maintenanceCost Int
+}
