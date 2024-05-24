@@ -24,18 +24,26 @@ enum DriverDocumentType {
   DATE_OF_BIRTH
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
-  buses Bus[]
+  userId Int     @id @default(autoincrement())
+  email  String  @unique
+  name   String
+  image  String?
+  buses  Bus[]
+  paid   Boolean @default(false)
+  role   Role    @default(USER)
 }
 
 model Bus {
   id        Int           @id @default(autoincrement())
   name      String        @unique
   userId    Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User          @relation(fields: [userId], references: [userId])
   documents BusDocument[]
   trips     Trip[]
 }

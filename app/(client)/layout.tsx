@@ -1,4 +1,5 @@
 import AppBar from "@/components/appbar";
+import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "TrackNGo",
@@ -13,6 +14,7 @@ export default function Layout({
   return (
     <div className="h-screen flex flex-col">
       <AppBar />
+      <Separator />
       <div className="grow">{children}</div>
     </div>
   );
