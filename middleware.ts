@@ -8,7 +8,6 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret });
 
   // Redirect to landing page if not authenticated
-  console.log(token);
   if (!token) return NextResponse.redirect(new URL("/", req.url));
 
   // Check if user is paid without using prisma
