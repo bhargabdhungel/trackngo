@@ -2,14 +2,18 @@
   "name": "trackngo",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "populate": "node --experimental-modules scripts/populate.js",
+    "cleardb": "node --experimental-modules scripts/erase.js"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@prisma/client": "^5.14.0",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
