@@ -13,8 +13,11 @@ export default async function HomePage(): Promise<JSX.Element> {
         <h1>Welcome to TrackNGo! {user.name}</h1>
         <p>Here are the buses:</p>
         <p>{paid ? "Paid" : "Not paid"} User</p>
-        <Link href="/addvehicle">
+        <Link href="/vehicle/addnew">
           <Button>Add New Vehicle</Button>
+        </Link>
+        <Link href="/vehicle">
+          <Button>View Vehicles</Button>
         </Link>
       </div>
     </div>
