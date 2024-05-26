@@ -1,25 +1,15 @@
 import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
-
-import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import getAll from "@/app/actions/bus/getAll";
+import Link from "next/link";
 
-export default async function CommandDemo() {
+export default async function Commands() {
   const vehicles = await getAll();
 
   return (
@@ -31,9 +21,11 @@ export default async function CommandDemo() {
             <CommandEmpty>No Vehicles Found</CommandEmpty>
             <CommandGroup heading="vehicles">
               {vehicles.map((vehicle) => (
-                <CommandItem key={vehicle.id}>
-                  <span>{vehicle.name}</span>
-                </CommandItem>
+                <Link key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
+                  <CommandItem className="p-2 text-xl cursor-pointer">
+                    <span>{vehicle.name}</span>
+                  </CommandItem>
+                </Link>
               ))}
             </CommandGroup>
           </CommandList>

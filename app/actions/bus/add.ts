@@ -1,5 +1,6 @@
 "use server";
 
+import VehicleWithId from "@/app/(client)/vehicle/[id]/page";
 import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
 
@@ -7,7 +8,7 @@ export default async function addVehicle(vehiclename: string) {
   const token = await getUserServer();
   const email = token.email as string;
 
-  vehiclename = vehiclename.toLocaleLowerCase();
+  vehiclename = vehiclename.trim().toUpperCase();
 
   const user = await prisma.user.findUnique({
     where: {
