@@ -1,4 +1,4 @@
-import getAll from "@/app/actions/bus/getAll";
+import getAll from "@/app/actions/vehicle/getAll";
 import isPaidUser from "@/app/actions/user/isPaid";
 import { Button } from "@/components/ui/button";
 import getUserServer from "@/hooks/useAuthServer";

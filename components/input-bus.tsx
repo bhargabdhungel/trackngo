@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import addBus from "@/app/actions/bus/add";
+import addBus from "@/app/actions/vehicle/add";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";

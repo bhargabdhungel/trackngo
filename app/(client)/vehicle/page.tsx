@@ -6,7 +6,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import getAll from "@/app/actions/bus/getAll";
+import getAll from "@/app/actions/vehicle/getAll";
 import Link from "next/link";
 
 export default async function Commands() {

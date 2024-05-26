@@ -1,6 +1,4 @@
 "use server";
-
-import VehicleWithId from "@/app/(client)/vehicle/[id]/page";
 import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
 
@@ -44,7 +42,7 @@ export default async function addVehicle(vehiclename: string) {
     };
   }
 
-  const bus = await prisma.bus.create({
+  await prisma.bus.create({
     data: {
       name: vehiclename,
       userId: user.userId,

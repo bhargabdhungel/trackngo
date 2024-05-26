@@ -1,11 +1,12 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import get from "@/app/actions/bus/get";
+import get from "@/app/actions/vehicle/get";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { set } from "react-hook-form";
 import { Bus } from "@prisma/client";
 import { Vehicle } from "@/lib/types";
+import { InputFile } from "@/components/input-file";
 
 export default function VehicleWithId() {
   const path = usePathname();
@@ -51,6 +52,7 @@ export default function VehicleWithId() {
         <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
           {vehicle.name}
         </h2>
+        <InputFile />
       </div>
     </div>
   );
