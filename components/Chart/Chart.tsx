@@ -54,7 +54,6 @@ export default function Chart() {
                             data.map((entry, index) => (
                                 <Rectangle
                                     key={`bar-${index}`}
-                                    x={entry.name}
                                     y={entry.goal}
                                     width={20}
                                     height={entry.goal}
