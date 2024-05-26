@@ -1,4 +1,9 @@
 "use server";
+<<<<<<< HEAD:app/actions/vehicle/add.ts
+=======
+
+import VehicleWithId from "@/app/(client)/vehicle/[id]/page";
+>>>>>>> 68aff92 (vehicle details):app/actions/bus/add.ts
 import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
 
