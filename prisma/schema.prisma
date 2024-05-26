@@ -31,13 +31,16 @@ enum Role {
 }
 
 model User {
-  userId Int     @id @default(autoincrement())
-  email  String  @unique
-  name   String
-  image  String?
-  buses  Bus[]
-  paid   Boolean @default(false)
-  role   Role    @default(USER)
+  userId  Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String
+  image   String?
+  buses   Bus[]
+  drivers Driver[]
+  trips   Trip[]
+
+  paid Boolean @default(false)
+  role Role    @default(USER)
 }
 
 model Bus {
@@ -50,9 +53,12 @@ model Bus {
 }
 
 model Driver {
-  id        Int              @id @default(autoincrement())
-  name      String
+  id   Int    @id @default(autoincrement())
+  name String
+
   contact   String           @unique
+  userId    Int
+  user      User             @relation(fields: [userId], references: [userId])
   documents DriverDocument[]
   trips     Trip[]
 }
@@ -80,6 +86,8 @@ model Trip {
   bus             Bus      @relation(fields: [busId], references: [id])
   driverId        Int
   driver          Driver   @relation(fields: [driverId], references: [id])
+  userId          Int
+  user            User     @relation(fields: [userId], references: [userId])
   routeFrom       String
   routeTo         String
   startTime       DateTime
