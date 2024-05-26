@@ -6,11 +6,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-<<<<<<< HEAD
 import getAll from "@/app/actions/vehicle/getAll";
-=======
-import getAll from "@/app/actions/bus/getAll";
->>>>>>> 68aff92 (vehicle details)
 import Link from "next/link";
 
 export default async function Commands() {
