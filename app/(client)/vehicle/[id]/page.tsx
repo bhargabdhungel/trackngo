@@ -1,10 +1,8 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import get from "@/app/actions/vehicle/get";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { set } from "react-hook-form";
-import { Bus } from "@prisma/client";
 import { Vehicle } from "@/lib/types";
 import { InputFile } from "@/components/input-file";
 
