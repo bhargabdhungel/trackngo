@@ -21,4 +21,4 @@ export interface Vehicles {
   id: number;
   name: string;
   userId: number;
-}[]
+}

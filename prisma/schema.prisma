@@ -55,7 +55,6 @@ model Bus {
 model Driver {
   id   Int    @id @default(autoincrement())
   name String
-
   contact   String           @unique
   userId    Int
   user      User             @relation(fields: [userId], references: [userId])

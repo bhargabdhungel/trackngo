@@ -37,7 +37,7 @@ export default async function addTrip(
     };
   }
 
-  // 
+  // Checks for the bus
   const bus = await prisma.bus.findUnique({
     where: {
       name: busName
@@ -52,7 +52,7 @@ export default async function addTrip(
     }
   }
 
-  await prisma.trip.create({
+  const response = await prisma.trip.create({
     data: {
       busId: bus.id,
       driverId: driverId,

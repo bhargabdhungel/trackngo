@@ -16,39 +16,41 @@ import {
 import { Input } from "@/components/ui/input"
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import { useEffect, useState } from "react";
-import { Vehicle, Vehicles } from "@/lib/types";
+import { Vehicles } from "@/lib/types";
 import { Selector } from "@/components/selector";
+import MoneyInput from "@/components/MoneyInput/MoneyInput";
+import addTrip from "@/app/actions/trip/addTrip";
+
+type VehiclesType = Vehicles[];
 
 const formSchema = z.object({
     routeFrom: z.string().min(1, { message: "Route from is required." }),
     routeTo: z.string().min(1, { message: "Route to is required." }),
     startTime: z.string(),
     endTime: z.string(),
-    fare: z.preprocess((val) => Number(val), z.number().nonnegative().min(0, { message: "Fare must be a non-negative number." })),
-    maintenanceCost: z.preprocess((val) => Number(val), z.number().nonnegative().min(0, { message: "Maintenance cost must be a non-negative number." })),
+    fare: z.coerce.number().min(0, "Required"),
+    maintenanceCost: z.coerce.number().min(0.01, "Required"),
+    busName: z.string(),
+    driverId: z.number()
 });
 
 export default function AddTrip() {
+    const sampleDrivers: { id: number; name: string }[] = [
+        { id: 1, name: "Rohan" },
+        { id: 2, name: "Totu" },
+        { id: 3, name: "Mohit" },
+        { id: 4, name: "Bhargab" },
+        { id: 5, name: "Priyanshu" },
+    ]
+    const [driverId, setDriverId] = useState<number>();
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [vehicles, setVehicles] = useState<any>(null);
 
-    useEffect(() => {
+    // Gets all the vehicles
+    const [allVehicles, setAllVehicles] = useState<VehiclesType | null>(null);
 
-        const loadVehicles = async () => {
-            try {
-                setIsLoading(true);
-
-                const getVehicles = await getAllVehicles();
-                console.log(getVehicles)
-                setVehicles(getVehicles);
-                setIsLoading(false)
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
-        loadVehicles()
-    }, [])
+    // To select a bus
+    const [busName, setBusName] = useState<string>("");
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -59,28 +61,56 @@ export default function AddTrip() {
             endTime: new Date().toISOString().slice(0, 16),
             fare: 0,
             maintenanceCost: 0,
+            busName: "",
+            driverId: 0
         },
+        mode: "onTouched",
     });
 
-    const options = vehicles ? vehicles.map((vehicle: any) => ({
+    useEffect(() => {
+        const loadVehicles = async () => {
+            try {
+                setIsLoading(true);
+
+                const getVehicles = await getAllVehicles();
+                setAllVehicles(getVehicles);
+
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        loadVehicles()
+    }, [setAllVehicles])
+
+    const options = allVehicles ? allVehicles.map((vehicle: Vehicles) => ({
         value: vehicle.name,
         label: vehicle.name
     })) : []
 
-    const [busName, setBusName] = useState<string>("");
-        
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    const driverOptions = sampleDrivers ? sampleDrivers.map((driver: { id: number; name: string }) => ({
+        value: driver.name,
+        label: driver.name
+    })) : []
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        values.busName = busName
+
         console.log(values)
-        console.log(busName);
+
+        // const response: { success: boolean; message: string; description: string } = await addTrip(
+        //     values.busName,
+        //     values.driverId,
+        //     values.routeFrom,
+        //     values.routeTo,
+        //     new Date(values.startTime),
+        //     new Date(values.endTime),
+        //     values.fare,
+        //     values.maintenanceCost
+        // )
+        // console.log(response);
     }
-
-    // Send bus name in backend
-    // Get all vehicles name from actions/vehicles
-    // Selector to get a vehicle(bus name)
-    // Send bus name with others to backend
-
-    // Under actions
-    // Create a backend file to get bus id from backend
 
     return (
         <>
@@ -138,30 +168,18 @@ export default function AddTrip() {
                         )}
                     />
 
-                    <FormField
+                    <MoneyInput
+                        form={form}
+                        label="Fare"
                         name="fare"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Fare</FormLabel>
-                                <FormControl>
-                                    <Input type="number" step="0.01" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        placeholder=""
                     />
 
-                    <FormField
+                    <MoneyInput
+                        form={form}
+                        label="Maintenance Cost"
                         name="maintenanceCost"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Maintenance Cost</FormLabel>
-                                <FormControl>
-                                    <Input type="number" step="0.01" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        placeholder=""
                     />
 
                     <Selector
@@ -169,6 +187,18 @@ export default function AddTrip() {
                         options={options}
                         placeholder="Choose a vehicle"
                         setSelected={setBusName}
+                    />
+
+                    <Selector
+                        label="Drivers"
+                        options={driverOptions}
+                        placeholder="Choose a driver"
+                        setSelected={(selectedDriverName: string) => {
+                            const selectedDriver = sampleDrivers.find(driver => driver.name === selectedDriverName);
+                            if (selectedDriver) {
+                                setDriverId(selectedDriver.id);
+                            }
+                        }}
                     />
 
                     <Button type="submit">Submit</Button>
