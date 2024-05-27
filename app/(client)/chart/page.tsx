@@ -14,7 +14,7 @@ import {
 
 export default function ChartPage() {
   return (
-    <div className="h-1/2 w-5/6">
+    <div className="h-1/2 w-5/6r">
       <Chart />;
     </div>
   );

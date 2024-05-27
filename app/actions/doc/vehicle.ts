@@ -1,74 +1,48 @@
+"use server";
+import { BusDocumentType, DriverDocumentType } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
-import axios from "axios";
-import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
-import { BusDocumentType } from "@prisma/client";
 
+// Configure Cloudinary using environment variables
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Function to upload File to Cloudinary and get the link
-export default async function uploadFileToCloudinary(
-  file: File,
-  filename: string,
-  type: BusDocumentType,
+// Function to upload Base64 encoded file
+async function uploadFile(
+  base64Data: string,
   busId: number,
+  type: BusDocumentType,
   expiryDate: Date
 ) {
   try {
-    const formData = new FormData();
-    formData.append("file", file, filename);
-    formData.append("upload_preset", "mbptyl5f");
-
-    // Upload to Cloudinary
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${
-        cloudinary.config().cloud_name
-      }/upload`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    // return response.data.secure_url;
-
-    // save the image url to the database
-
-    const token = await getUserServer();
-    const email = token.email as string;
-
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-      select: {
-        userId: true,
-      },
+    const uploadResult = await cloudinary.uploader.upload(base64Data, {
+      resource_type: "image",
     });
-
-    if (!user) {
-      return {
-        success: false,
-        message: "User not found",
-        description: "Please login to create add a vehicle",
-      };
-    }
+    const link = uploadResult.secure_url;
 
     await prisma.busDocument.create({
       data: {
-        expiryDate: expiryDate,
-        link: response.data.secure_url,
+        busId,
+        link,
         type: type,
-        busId: busId,
+        expiryDate,
       },
     });
+
+    return {
+      success: true,
+      message: "File uploaded successfully",
+    };
   } catch (error) {
-    console.error("Error uploading file to Cloudinary:", error);
-    return null;
+    console.error("Upload failed:", error);
+    return {
+      success: false,
+      message: "Error uploading file",
+    };
   }
 }
+
+export { uploadFile };

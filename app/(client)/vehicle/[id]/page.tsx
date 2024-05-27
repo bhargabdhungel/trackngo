@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { Vehicle } from "@/lib/types";
 import { InputFile } from "@/components/input-file";
+import Image from "next/image";
 
 export default function VehicleWithId() {
   const path = usePathname();
@@ -46,11 +47,17 @@ export default function VehicleWithId() {
 
   return (
     <div className="flex justify-center h-full">
-      <div className="h-1/4 flex justify-center items-center">
-        <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+      <div className="h-1/4 flex flex-col pt-12 items-center">
+        <h2 className="scroll-m-20 border-b pb-12 text-3xl font-semibold tracking-tight first:mt-0">
           {vehicle.name}
         </h2>
         <InputFile />
+        {/* {vehicle && (
+          <div className="flex flex-col items-center">
+            <Image src={"fsfsfdaf"} width={200} height={200} alt="Vehicle" />
+            <p className="text-lg mt-4">{vehicle.name}</p>
+          </div>
+        )} */}
       </div>
     </div>
   );
