@@ -41,6 +41,7 @@ export default async function addTrip(
     data: {
       busId: busId,
       driverId: driverId,
+      userId: user.userId,
       routeFrom: routeFrom,
       routeTo: routeTo,
       startTime: startTime,
