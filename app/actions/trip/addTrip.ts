@@ -4,7 +4,7 @@ import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
 
 export default async function addTrip(
-  busId: number,
+  busName: string,
   driverId: number,
   routeFrom: string,
   routeTo: string,
@@ -37,9 +37,24 @@ export default async function addTrip(
     };
   }
 
+  // 
+  const bus = await prisma.bus.findUnique({
+    where: {
+      name: busName
+    }
+  })
+
+  if(!bus) {
+    return {
+      success: false,
+      message: "Bus not found",
+      description: "Please re - select the bus"
+    }
+  }
+
   await prisma.trip.create({
     data: {
-      busId: busId,
+      busId: bus.id,
       driverId: driverId,
       userId: user.userId,
       routeFrom: routeFrom,

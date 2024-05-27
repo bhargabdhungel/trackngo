@@ -16,3 +16,9 @@ export interface Vehicle {
     expiryDate: Date;
   }[];
 }
+
+export interface Vehicles {
+  id: number;
+  name: string;
+  userId: number;
+}[]

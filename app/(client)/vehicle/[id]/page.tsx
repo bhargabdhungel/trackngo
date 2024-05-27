@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import get from "@/app/actions/vehicle/get";
+import getVehicleWithId from "@/app/actions/vehicle/get";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { Vehicle } from "@/lib/types";
@@ -17,7 +17,7 @@ export default function VehicleWithId() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const response = await get(id);
+        const response = await getVehicleWithId(id);
         if (response.success) {
           const vehicle = response.data;
           setVehicle(vehicle as Vehicle);

@@ -2,7 +2,7 @@
 import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
 
-export default async function get(id: number) {
+export default async function getVehicle(id: number) {
   const token = await getUserServer();
   const email = token.email as string;
 

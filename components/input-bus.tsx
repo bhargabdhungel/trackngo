@@ -72,7 +72,7 @@ export function InputBus() {
               <FormControl>
                 <Input placeholder="name of the vehicle" {...field} />
               </FormControl>
-              <FormDescription>vehicle name should be unique</FormDescription>
+              <FormDescription>Vehicle name should be unique</FormDescription>
               <FormMessage />
             </FormItem>
           )}
