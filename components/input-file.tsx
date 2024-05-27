@@ -88,7 +88,9 @@ export function InputFile() {
       );
 
       toast({
-        title: "Awesome",
+        title: res.success
+          ? "File uploaded successfully"
+          : "Error uploading file",
         description: res.message,
       });
       setLoading(false);
