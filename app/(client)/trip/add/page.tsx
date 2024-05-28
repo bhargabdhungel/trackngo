@@ -114,96 +114,113 @@ export default function AddTrip() {
 
     return (
         <>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-10">
-                    <FormField
-                        name="routeFrom"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Route From</FormLabel>
-                                <FormControl>
-                                    <Input type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+            <div className="fixed inset-0 max-w-4xl mx-auto px-6 py-8 rounded-lg shadow-md mt-20">
+                <header className="text-center text-2xl font-bold mb-5 border-b border-orange-50">
+                    Add a Trip
+                </header>
 
-                    <FormField
-                        name="routeTo"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Route To</FormLabel>
-                                <FormControl>
-                                    <Input type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <FormField
+                                name="routeFrom"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Route From</FormLabel>
+                                        <FormControl>
+                                            <Input type="text" {...field} className="input-field" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    <FormField
-                        name="startTime"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Start Time</FormLabel>
-                                <FormControl>
-                                    <Input type="datetime-local" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                            <FormField
+                                name="routeTo"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Route To</FormLabel>
+                                        <FormControl>
+                                            <Input type="text" {...field} className="input-field" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
-                    <FormField
-                        name="endTime"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>End Time</FormLabel>
-                                <FormControl>
-                                    <Input type="datetime-local" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <FormField
+                                name="startTime"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Start Time</FormLabel>
+                                        <FormControl>
+                                            <Input type="datetime-local" {...field} className="input-field w-50" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    <MoneyInput
-                        form={form}
-                        label="Fare"
-                        name="fare"
-                        placeholder=""
-                    />
+                            <FormField
+                                name="endTime"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>End Time</FormLabel>
+                                        <FormControl>
+                                            <Input type="datetime-local" {...field} className="input-field w-50" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
-                    <MoneyInput
-                        form={form}
-                        label="Maintenance Cost"
-                        name="maintenanceCost"
-                        placeholder=""
-                    />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <MoneyInput
+                                form={form}
+                                label="Fare"
+                                name="fare"
+                                placeholder=""
+                            />
 
-                    <Selector
-                        label="Vehicles"
-                        options={options}
-                        placeholder="Choose a vehicle"
-                        setSelected={setBusName}
-                    />
+                            <MoneyInput
+                                form={form}
+                                label="Maintenance Cost"
+                                name="maintenanceCost"
+                                placeholder=""
+                            />
+                        </div>
 
-                    <Selector
-                        label="Drivers"
-                        options={driverOptions}
-                        placeholder="Choose a driver"
-                        setSelected={(selectedDriverName: string) => {
-                            const selectedDriver = sampleDrivers.find(driver => driver.name === selectedDriverName);
-                            if (selectedDriver) {
-                                setDriverId(selectedDriver.id);
-                            }
-                        }}
-                    />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <Selector
+                                label="Vehicles"
+                                options={options}
+                                placeholder="Choose a vehicle"
+                                setSelected={setBusName}
+                            />
 
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
+                            <Selector
+                                label="Drivers"
+                                options={driverOptions}
+                                placeholder="Choose a driver"
+                                setSelected={(selectedDriverName: string) => {
+                                    const selectedDriver = sampleDrivers.find(driver => driver.name === selectedDriverName);
+                                    if (selectedDriver) {
+                                        setDriverId(selectedDriver.id);
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        <div className="flex justify-end">
+                            <Button type="submit" className="btn-submit">Submit</Button>
+                        </div>
+                    </form>
+                </Form>
+            </div>
+
         </>
     )
 }
