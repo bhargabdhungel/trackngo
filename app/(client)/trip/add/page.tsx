@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import { useEffect, useState } from "react";
-import { Vehicles } from "@/lib/types";
+import { Vehicle } from "@/lib/types";
 import { Selector } from "@/components/selector";
 import MoneyInput from "@/components/MoneyInput/MoneyInput";
 import addTrip from "@/app/actions/trip/addTrip";
 
-type VehiclesType = Vehicles[];
+// type VehiclesType = Vehicle[];
 
 const formSchema = z.object({
     routeFrom: z.string().min(1, { message: "Route from is required." }),
@@ -47,7 +47,7 @@ export default function AddTrip() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Gets all the vehicles
-    const [allVehicles, setAllVehicles] = useState<VehiclesType | null>(null);
+    const [allVehicles, setAllVehicles] = useState<Vehicle[] | null>(null);
 
     // To select a bus
     const [busName, setBusName] = useState<string>("");
@@ -73,7 +73,7 @@ export default function AddTrip() {
                 setIsLoading(true);
 
                 const getVehicles = await getAllVehicles();
-                setAllVehicles(getVehicles);
+                if(getVehicles) setAllVehicles(getVehicles);
 
                 setIsLoading(false)
             } catch (error) {
@@ -84,10 +84,11 @@ export default function AddTrip() {
         loadVehicles()
     }, [setAllVehicles])
 
-    const options = allVehicles ? allVehicles.map((vehicle: Vehicles) => ({
+    const options = allVehicles ? allVehicles.map((vehicle: Vehicle) => ({
         value: vehicle.name,
-        label: vehicle.name
-    })) : []
+        label: vehicle.name,
+      }))
+    : [];
 
     const driverOptions = sampleDrivers ? sampleDrivers.map((driver: { id: number; name: string }) => ({
         value: driver.name,
