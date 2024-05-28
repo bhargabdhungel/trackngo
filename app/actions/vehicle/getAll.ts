@@ -1,28 +1,18 @@
 "use server";
 
-import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
+import authCheck from "../auth/authCheck";
 
 export default async function getAllVehicles() {
-  const token = await getUserServer();
-  const email = token.email as string;
-
-  // console.log(email, "email")
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email
-    }
-  })
-
-  if(!user) {
-    return [];
-  }
-
+  const user = await authCheck();
   const buses = await prisma.bus.findMany({
     where: {
-      userId: user?.userId
-    }
-  })
-
-  return buses;
+      userId: user.userId,
+    },
+  });
+  return {
+    success: true,
+    message: "Vehicles fetched",
+    data: buses,
+  };
 }
