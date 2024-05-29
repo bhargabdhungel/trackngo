@@ -23,7 +23,6 @@ import addTrip from "@/app/actions/trip/addTrip";
 // type VehiclesType = Vehicle[];
 import { useRecoilState, useRecoilValue } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
-import { Vehicle } from "@/lib/types";
 
 const formSchema = z.object({
   routeFrom: z.string().min(1, { message: "Route from is required." }),
