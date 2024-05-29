@@ -23,6 +23,9 @@ async function uploadFile(
     });
     const link = uploadResult.secure_url;
 
+    // Delete all duplicates of the document
+    // const
+
     await prisma.busDocument.create({
       data: {
         busId,
@@ -91,6 +94,33 @@ async function deleteFile(busDocumentId: number) {
       success: false,
       message: "Error deleting the document",
     };
+  }
+}
+
+async function deleteAllDuplicates(busId: number, type: BusDocumentType) {
+  const allDuplicates = await prisma.busDocument.findMany({
+    where: {
+      busId,
+      type,
+    },
+  });
+
+  // delete all duplicates from cloudinary
+
+  for (const duplicate of allDuplicates) {
+    const publicId = duplicate.link?.split("/").pop();
+    if (!publicId) {
+      return {
+        success: false,
+        message: "Error deleting the document",
+      };
+    }
+    await cloudinary.uploader.destroy(publicId);
+    await prisma.busDocument.delete({
+      where: {
+        id: duplicate.id,
+      },
+    });
   }
 }
 

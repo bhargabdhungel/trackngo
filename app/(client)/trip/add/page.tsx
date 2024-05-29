@@ -14,9 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import getAllVehicles from "@/app/actions/vehicle/getAll";
 import { useEffect, useState } from "react";
 import { Selector } from "@/components/selector";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { vehiclesAtom } from "@/atoms/vehicle";
+import { Vehicle } from "@/lib/types";
 
 const formSchema = z.object({
   routeFrom: z.string().min(1, { message: "Route from is required." }),
@@ -40,25 +42,7 @@ const formSchema = z.object({
 });
 
 export default function AddTrip() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [vehicles, setVehicles] = useState<any>(null);
-
-  useEffect(() => {
-    const loadVehicles = async () => {
-      try {
-        setIsLoading(true);
-
-        const getVehicles = await getAllVehicles();
-        console.log(getVehicles);
-        setVehicles(getVehicles);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    loadVehicles();
-  }, []);
+  const vehicles: Vehicle[] | null = useRecoilValue(vehiclesAtom);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

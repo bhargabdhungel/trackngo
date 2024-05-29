@@ -11,6 +11,7 @@ export default async function authCheck() {
       email: token.email,
     },
   });
+
   if (!user) redirect("/");
   return user;
 }
