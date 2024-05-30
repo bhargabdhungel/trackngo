@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,42 +13,46 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import addBus from "@/app/actions/vehicle/add";
+import addDriver from "@/app/actions/driver/add";
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
-import { vehiclesAtom } from "@/atoms/vehicle";
+import { driversAtom } from "@/atoms/driver";
 import Loading from "./loading";
 
 const FormSchema = z.object({
-  vehiclename: z.string().min(2, {
-    message: "vehilename is too short",
+  name: z.string().min(2, {
+    message: "Driver name is too short",
+  }),
+  contact: z.string().min(5, {
+    message: "Contact is too short",
   }),
 });
 
-export default function InputBus() {
+export default function InputDriver() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const setVehicles = useSetRecoilState(vehiclesAtom);
+  const setDrivers = useSetRecoilState(driversAtom);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      vehiclename: "",
+      name: "",
+      contact: "",
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setLoading(true);
-      const response = await addBus(data.vehiclename);
+      const response = await addDriver(data.name, data.contact);
       if (response.success) {
-        setVehicles((currentVehicles) => {
-          if (!currentVehicles) return [response.data!];
-          return [...currentVehicles, response.data!];
+        setDrivers((currentDrivers) => {
+          if (!currentDrivers) return [response.data!];
+          return [...currentDrivers, response.data!];
         });
         form.reset();
-        router.replace("/vehicle");
+        router.replace("/driver");
       }
       toast({
         title: response.message,
@@ -59,7 +62,7 @@ export default function InputBus() {
       console.error(error);
       toast({
         title: "An error occurred",
-        description: "Please try again",
+        description: "Failed to add driver",
       });
     } finally {
       setLoading(false);
@@ -73,14 +76,28 @@ export default function InputBus() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
-          name="vehiclename"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vehicle</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="name of the vehicle" {...field} />
+                <Input placeholder="Name of the driver" {...field} />
               </FormControl>
-              <FormDescription>Vehicle name should be unique</FormDescription>
+              <FormDescription>Enter the name of the driver</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="contact"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact</FormLabel>
+              <FormControl>
+                <Input placeholder="Contact number" {...field} />
+              </FormControl>
+              <FormDescription>Enter the contact number</FormDescription>
               <FormMessage />
             </FormItem>
           )}

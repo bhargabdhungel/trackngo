@@ -9,14 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// Extend the props interface to include setSelected
-interface SelectorProps {
-  placeholder: string;
-  label: string;
-  options: Array<{ value: string; label: string }>;
-  setSelected: (value: string) => void; // Function to update the selected value
-}
+import { SelectorProps } from "@/lib/types";
 
 export function Selector({
   placeholder,
@@ -26,7 +19,7 @@ export function Selector({
 }: SelectorProps) {
   return (
     <Select onValueChange={setSelected}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

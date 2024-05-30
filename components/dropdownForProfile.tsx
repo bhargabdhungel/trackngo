@@ -31,7 +31,6 @@ import Logout from "./dropdown/logout";
 
 export default async function DropdownMenuProfile(): Promise<JSX.Element> {
   const user = await useAuthServer();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

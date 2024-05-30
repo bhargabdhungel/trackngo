@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 export default async function authCheck() {
   const token = await getUserServer();
+
   if (!token.email) redirect("/");
   const user = await prisma.user.findUnique({
     where: {

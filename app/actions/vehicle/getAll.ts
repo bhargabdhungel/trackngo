@@ -9,6 +9,12 @@ export default async function getAllVehicles() {
     where: {
       userId: user.userId,
     },
+    select: {
+      id: true,
+      name: true,
+      userId: true,
+      documents: true,
+    },
   });
   return {
     success: true,

@@ -1,30 +1,10 @@
 "use server";
-import getUserServer from "@/hooks/useAuthServer";
 import prisma from "@/prisma/db";
+import authCheck from "../auth/authCheck";
 
 export default async function addVehicle(vehiclename: string) {
-  const token = await getUserServer();
-  const email = token.email as string;
-
+  const user = await authCheck();
   vehiclename = vehiclename.trim().toUpperCase();
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-    select: {
-      userId: true,
-    },
-  });
-
-  if (!user) {
-    return {
-      success: false,
-      message: "User not found",
-      description: "Please login to create add a vehicle",
-    };
-  }
-
   const vehicleExists = await prisma.bus.findUnique({
     where: {
       name: vehiclename,
@@ -42,10 +22,16 @@ export default async function addVehicle(vehiclename: string) {
     };
   }
 
-  await prisma.bus.create({
+  const vehicle = await prisma.bus.create({
     data: {
       name: vehiclename,
       userId: user.userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      userId: true,
+      documents: true,
     },
   });
 
@@ -53,5 +39,6 @@ export default async function addVehicle(vehiclename: string) {
     success: true,
     message: "Vehicle created successfully",
     description: `Vehicle ${vehiclename} has been created`,
+    data: vehicle,
   };
 }

@@ -1,21 +1,45 @@
 import { BusDocumentType } from "@prisma/client";
+import { DriverDocumentType } from "@prisma/client";
 
 export interface User {
+  userId?: number;
   name?: string;
   email?: string;
   image?: string;
 }
 
 export interface VehicleDocument {
-  id: number;
+  id?: number;
   busId: number;
   type: BusDocumentType;
   link: string;
   expiryDate: Date;
 }
+export interface DriverDocument {
+  id?: number;
+  driverId: number;
+  type: DriverDocumentType;
+  link: string;
+}
+
 export interface Vehicle {
-  id: number;
+  id?: number;
   name: string;
   userId: number;
   documents?: VehicleDocument[];
+}
+
+export interface Driver {
+  id?: number;
+  name: string;
+  contact: string;
+  userId: number;
+  documents?: DriverDocument[];
+}
+
+export interface SelectorProps {
+  placeholder: string;
+  label: string;
+  options: Array<{ value: string; label: string }>;
+  setSelected: (value: string) => void;
 }

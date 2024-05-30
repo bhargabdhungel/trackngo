@@ -1,16 +1,4 @@
-import {
-  BallTriangle,
-  TailSpin,
-  ThreeDots,
-  Bars,
-  Circles,
-  Grid,
-  Hearts,
-  Oval,
-  Puff,
-  Rings,
-  SpinningCircles,
-} from "react-loading-icons";
+import { BallTriangle } from "react-loading-icons";
 
 export default function Loading() {
   return (

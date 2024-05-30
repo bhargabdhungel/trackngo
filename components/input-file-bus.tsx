@@ -3,10 +3,9 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { BusDocumentType } from "@prisma/client";
 import { Selector } from "./selector";
-import { DatePicker } from "./datepicker";
 import { uploadFile } from "@/app/actions/doc/vehicle";
 
 function readFileAsDataURL(file: File): Promise<string> {
@@ -24,13 +23,14 @@ function readFileAsDataURL(file: File): Promise<string> {
   });
 }
 
-export function InputFile() {
+export function InputFile({ vehicleId }: { vehicleId: number }) {
   const [inputFile, setInputFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const pathname = usePathname();
+  const router = useRouter();
+
   const [type, setType] = useState<string>("");
-  const busId = parseInt(pathname.split("/")[2]);
+  const busId = vehicleId;
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +93,10 @@ export function InputFile() {
           : "Error uploading file",
         description: res.message,
       });
+
       setLoading(false);
+
+      router.replace(`/vehicle/${busId}/`);
     } catch (error) {
       toast({
         title: "Error uploading file",
@@ -112,7 +115,7 @@ export function InputFile() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-5/6">
       <Input type="file" accept="image/*" onChange={handleFileChange} />
       <Selector
         placeholder="Select a document"
@@ -120,7 +123,10 @@ export function InputFile() {
         setSelected={setType}
         options={fruitOptions}
       />
-      <DatePicker date={expiryDate} setDate={setExpiryDate} />
+      <Input
+        type="date"
+        onChange={(e) => setExpiryDate(new Date(e.target.value))}
+      />
       <Button className="mt-12" onClick={handleUpload}>
         Upload
       </Button>

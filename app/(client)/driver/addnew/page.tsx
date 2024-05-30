@@ -1,9 +1,9 @@
-import InputBus from "@/components/input-bus";
+import InputDriver from "@/components/input-driver";
 
 export default function AddVehicle() {
   return (
     <div className="flex justify-center items-center h-full">
-      <InputBus />
+      <InputDriver />
     </div>
   );
 }

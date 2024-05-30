@@ -24,5 +24,14 @@ export const authOptions = {
       }
       return true;
     },
+
+    async session({ session, token }: any) {
+      const user = await prisma.user.findUnique({
+        where: { email: token.email },
+        select: { userId: true },
+      });
+      session.user.userId = user?.userId;
+      return session;
+    },
   },
 };
