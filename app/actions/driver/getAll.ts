@@ -9,6 +9,13 @@ export default async function getAllDrivers() {
     where: {
       userId: user.userId,
     },
+    select: {
+      id: true,
+      userId: true,
+      name: true,
+      contact: true,
+      documents: true,
+    },
   });
   return {
     success: true,

@@ -8,7 +8,7 @@ import { BusDocumentType } from "@prisma/client";
 import { Selector } from "./selector";
 import { uploadFile } from "@/app/actions/doc/vehicle";
 
-function readFileAsDataURL(file: File): Promise<string> {
+export function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
@@ -26,9 +26,7 @@ function readFileAsDataURL(file: File): Promise<string> {
 export function InputFile({ vehicleId }: { vehicleId: number }) {
   const [inputFile, setInputFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
   const router = useRouter();
-
   const [type, setType] = useState<string>("");
   const busId = vehicleId;
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
@@ -115,7 +113,7 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col gap-4 w-5/6">
+    <div className="flex flex-col gap-8 w-5/6 items-center">
       <Input type="file" accept="image/*" onChange={handleFileChange} />
       <Selector
         placeholder="Select a document"

@@ -1,7 +1,8 @@
 "use server";
-import { BusDocumentType, DriverDocumentType } from "@prisma/client";
+import { BusDocumentType } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
 import prisma from "@/prisma/db";
+import authCheck from "../auth/authCheck";
 
 // Configure Cloudinary using environment variables
 cloudinary.config({
@@ -18,13 +19,51 @@ async function uploadFile(
   expiryDate: Date
 ) {
   try {
+    const user = await authCheck();
+
+    const vehicle = await prisma.bus.findUnique({
+      where: {
+        id: busId,
+        userId: user.userId,
+      },
+    });
+
+    if (!vehicle) {
+      return {
+        success: false,
+        message: "Vehicle not found",
+      };
+    }
+
     const uploadResult = await cloudinary.uploader.upload(base64Data, {
       resource_type: "image",
     });
     const link = uploadResult.secure_url;
 
     // Delete all duplicates of the document
-    // const
+    const dublicates = await prisma.busDocument.findMany({
+      where: {
+        busId,
+        type,
+      },
+    });
+
+    await prisma.busDocument.deleteMany({
+      where: {
+        busId,
+        type,
+      },
+    });
+
+    // delete all duplicates from the cloudinary
+    await Promise.all(
+      dublicates.map(async (doc) => {
+        const publicId = doc.link?.split("/").pop();
+        if (publicId) {
+          await cloudinary.uploader.destroy(publicId);
+        }
+      })
+    );
 
     await prisma.busDocument.create({
       data: {
@@ -48,10 +87,10 @@ async function uploadFile(
   }
 }
 
-// Function to delete file both from Cloudinary and the database
 async function deleteFile(busDocumentId: number) {
   try {
-    // Retrieve the document from the database
+    const user = await authCheck();
+
     const busDocument = await prisma.busDocument.findUnique({
       where: {
         id: busDocumentId,
@@ -59,6 +98,19 @@ async function deleteFile(busDocumentId: number) {
     });
 
     if (!busDocument) {
+      return {
+        success: false,
+        message: "Document not found",
+      };
+    }
+
+    const bus = await prisma.bus.findUnique({
+      where: {
+        id: busDocument.busId,
+      },
+    });
+
+    if (!bus || bus.userId !== user.userId) {
       return {
         success: false,
         message: "Document not found",
@@ -73,8 +125,6 @@ async function deleteFile(busDocumentId: number) {
         message: "Error deleting the document",
       };
     }
-
-    // Delete the file from Cloudinary
     await cloudinary.uploader.destroy(publicId);
 
     // Delete the document from the database
@@ -97,33 +147,4 @@ async function deleteFile(busDocumentId: number) {
   }
 }
 
-async function deleteAllDuplicates(busId: number, type: BusDocumentType) {
-  const allDuplicates = await prisma.busDocument.findMany({
-    where: {
-      busId,
-      type,
-    },
-  });
-
-  // delete all duplicates from cloudinary
-
-  for (const duplicate of allDuplicates) {
-    const publicId = duplicate.link?.split("/").pop();
-    if (!publicId) {
-      return {
-        success: false,
-        message: "Error deleting the document",
-      };
-    }
-    await cloudinary.uploader.destroy(publicId);
-    await prisma.busDocument.delete({
-      where: {
-        id: duplicate.id,
-      },
-    });
-  }
-}
-
-export { deleteFile };
-
-export { uploadFile };
+export { uploadFile, deleteFile };

@@ -31,16 +31,19 @@ enum Role {
 }
 
 model User {
-  userId  Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String
-  image   String?
-  buses   Bus[]
-  drivers Driver[]
-  trips   Trip[]
+  userId    Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  image     String?
+  buses     Bus[]
+  drivers   Driver[]
+  trips     Trip[]
+  paid      Boolean  @default(false)
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-  paid Boolean @default(false)
-  role Role    @default(USER)
+  @@index([email])
 }
 
 model Bus {
@@ -50,16 +53,25 @@ model Bus {
   user      User          @relation(fields: [userId], references: [userId])
   documents BusDocument[]
   trips     Trip[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([userId])
 }
 
 model Driver {
   id        Int              @id @default(autoincrement())
-  name      String
+  name      String           @unique
   contact   String           @unique
+  image     String?
   userId    Int
   user      User             @relation(fields: [userId], references: [userId])
   documents DriverDocument[]
   trips     Trip[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @default(now())
+
+  @@index([userId])
 }
 
 model BusDocument {
@@ -69,14 +81,23 @@ model BusDocument {
   type       BusDocumentType
   link       String
   expiryDate DateTime
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([busId])
 }
 
 model DriverDocument {
-  id       Int                @id @default(autoincrement())
-  driverId Int
-  driver   Driver             @relation(fields: [driverId], references: [id])
-  type     DriverDocumentType
-  link     String
+  id         Int                @id @default(autoincrement())
+  driverId   Int
+  driver     Driver             @relation(fields: [driverId], references: [id])
+  type       DriverDocumentType
+  link       String
+  expiryDate DateTime
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  @@index([driverId])
 }
 
 model Trip {
@@ -91,6 +112,20 @@ model Trip {
   routeTo         String
   startTime       DateTime
   endTime         DateTime
-  fare            Int
-  maintenanceCost Int
+  fare            Int?     @default(0)
+  maintenanceCost Int?     @default(0)
+  fuelCost        Int?     @default(0)
+  otherCost       Int?     @default(0)
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([busId])
+  @@index([driverId])
+  @@index([userId])
+}
+
+model Location {
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }

@@ -10,7 +10,15 @@ export default async function addDriver(name: string, contact: string) {
   // Check if driver already exists with the same name or contact
   const driverExists = await prisma.driver.findFirst({
     where: {
-      contact: contact,
+      userId: user.userId,
+      OR: [
+        {
+          name: name,
+        },
+        {
+          contact: contact,
+        },
+      ],
     },
     select: {
       id: true,
@@ -22,7 +30,7 @@ export default async function addDriver(name: string, contact: string) {
       success: false,
       message: "Driver already exists",
       description:
-        "A driver with the same contact number already exists in the system",
+        "A driver with the same name or contact already exists in the system",
     };
   }
 
