@@ -1,16 +1,16 @@
 "use client"
 
-import { loadingAtom } from "@/atoms/loading";
+import { useTheme } from "next-themes";
 import { BallTriangle } from "react-loading-icons";
-import { useRecoilValue } from "recoil";
 
 export default function Loading() {
-  const loading = useRecoilValue(loadingAtom)
+  const theme = useTheme().theme;
+  const stroke = theme == "dark" ? "white" : "black";
 
   return (
     <div className="h-full w-full flex items-center justify-center">
       <div>
-        <BallTriangle stroke={loading!} />
+        <BallTriangle stroke={stroke} />
       </div>
     </div>
   );
