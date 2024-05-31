@@ -1,6 +1,7 @@
 "use client";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useSetRecoilState } from "recoil";
 
 export default function ModeToggle(): JSX.Element {
   const { theme, setTheme } = useTheme();
