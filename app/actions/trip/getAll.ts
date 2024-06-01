@@ -19,7 +19,7 @@ export default async function getAllTrips() {
     return {
       success: false,
       message: "Failed to fetch trips",
-      description: error,
+      description: JSON.stringify(error),
     };
   }
 }
