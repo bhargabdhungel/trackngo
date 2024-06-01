@@ -1,5 +1,14 @@
-import { Payment, columns } from "./columns";
+"use client"
+
+import { useEffect, useState } from "react";
+import { columns } from "./columns";
 import { DataTable } from "./DataTable";
+import { Trip } from "@/lib/types";
+import getAllTrips from "@/app/actions/trip/getAll";
+import { useRecoilState } from "recoil";
+import { tripsAtom } from "@/atoms/trip";
+import useFetchData from "@/hooks/useFetchData";
+import Loading from "@/components/loading";
 
 export default function GetTrips() {
     const data = [
@@ -15,10 +24,31 @@ export default function GetTrips() {
         { id: 10, from: "Atlanta", to: "Nashville", driver: "Alex White", fare: 115.00 }
     ];
 
+    const [trips, setTrips] = useState<Trip[]>([]);
+    // const [trips, setTrips] = useRecoilState(tripsAtom);
+    const [loading, setLoading] = useState<boolean>(false);
+    const shouldRun = trips ? false : true;
+
+    // useFetchData(shouldRun, setTrips, getAllTrips, setLoading);
+
+    useEffect(() => {
+        const fetch = async () => {
+            const response = await getAllTrips();
+            // console.log(response);
+            setTrips(response.data);
+        }
+
+        fetch();
+    }, [setTrips]);
+
+    // console.log(trips)
+
+    if(loading) return <Loading />
+
     return (
         <>
             <div className="container mx-auto py-10">
-                <DataTable columns={columns} data={data} />
+                <DataTable columns={columns} data={trips!} />
             </div>
         </>
     )
