@@ -10,6 +10,11 @@ import useFetchData from "@/hooks/useFetchData";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import Loading from "./loading";
+import { Trip } from "@/lib/types";
+import { userAtom } from "@/atoms/user";
+import addTrip from "@/app/actions/trip/add";
+import { toast } from "./ui/use-toast";
+import useAuthClient from "@/hooks/useAuthClient";
 
 export default function InputTrip() {
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
@@ -34,8 +39,8 @@ export default function InputTrip() {
 
   const [startLocation, setStartLocation] = useState<string>("");
   const [endLocation, setEndLocation] = useState<string>("");
-  const [startTime, setStartTime] = useState<string>("");
-  const [endTime, setEndTime] = useState<string>("");
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState<Date>(new Date());
   const [fare, setFare] = useState<string>("");
   const [maintenance, setMaintenance] = useState<string>("");
   const [fuel, setFuel] = useState<string>("");
@@ -43,8 +48,9 @@ export default function InputTrip() {
   const [description, setDescription] = useState<string>("");
   const [vehicleId, setVehicleId] = useState<string>("");
   const [driverId, setDriverId] = useState<string>("");
+  const { loading: authLoading, userData } = useAuthClient();
 
-  if (loading) return <Loading />;
+  if (loading || authLoading) return <Loading />;
 
   return (
     <div className="flex flex-col items-center w-5/6 gap-8 md:w-1/2 * pt-8 pb-8">
@@ -63,12 +69,12 @@ export default function InputTrip() {
       <Input
         type="datetime-local"
         placeholder="Start Date and Time"
-        onChange={(e) => setStartTime(e.target.value)}
+        onChange={(e) => setStartTime(new Date(e.target.value))}
       />
       <Input
         type="datetime-local"
         placeholder="End Date and Time"
-        onChange={(e) => setEndTime(e.target.value)}
+        onChange={(e) => setEndTime(new Date(e.target.value))}
       />
       <Input
         type="text"
@@ -106,20 +112,33 @@ export default function InputTrip() {
         onChange={(e) => setDescription(e.target.value)}
       />
       <Button
-        onClick={() => {
-          console.log({
-            startLocation,
-            endLocation,
+        onClick={async () => {
+          const trip: Trip = {
+            userId: userData.userId as number,
             startTime,
             endTime,
-            fare,
-            maintenance,
-            fuel,
-            otherExpenses,
+            routeFrom: startLocation,
+            routeTo: endLocation,
+            fare: parseInt(fare),
+            maintenanceCost: parseInt(maintenance),
+            fuelCost: parseInt(fuel),
+            otherCost: parseInt(otherExpenses),
             description,
-            vehicleId,
-            driverId,
-          });
+            busId: parseInt(vehicleId),
+            driverId: parseInt(driverId),
+          };
+          try {
+            const response = await addTrip(trip);
+            toast({
+              title: response.message,
+              description: response.description,
+            });
+          } catch (error) {
+            toast({
+              title: "Failed to add trip",
+              description: JSON.stringify(error),
+            });
+          }
         }}
       >
         Submit

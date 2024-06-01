@@ -43,3 +43,19 @@ export interface SelectorProps {
   options: Array<{ value: string; label: string }>;
   setSelected: (value: string) => void;
 }
+
+export interface Trip {
+  id?: number;
+  busId: number;
+  driverId: number;
+  userId: number;
+  routeFrom: string;
+  routeTo: string;
+  startTime: Date;
+  endTime: Date;
+  fare?: number;
+  maintenanceCost?: number;
+  fuelCost?: number;
+  otherCost?: number;
+  description?: string;
+}
