@@ -16,4 +16,8 @@ export const columns: ColumnDef<Trip>[] = [
         accessorKey: "fare",
         header: "FARE",
     },
+    {
+        accessorKey: "maintenanceCost",
+        header: "MAINTENANCE",
+    },
 ]
