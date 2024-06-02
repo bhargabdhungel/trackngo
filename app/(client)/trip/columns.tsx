@@ -20,4 +20,20 @@ export const columns: ColumnDef<Trip>[] = [
         accessorKey: "maintenanceCost",
         header: "MAINTENANCE",
     },
+    {
+        accessorKey: "fuelCost",
+        header: "FUEL COST"
+    },
+    {
+        accessorKey: "otherCost",
+        header: "OTHER COSTS"
+    },
+    {
+        accessorKey: "startTime",
+        header: "START"
+    },
+    {
+        accessorKey: "endTime",
+        header: "END"
+    }
 ]

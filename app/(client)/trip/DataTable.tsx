@@ -43,8 +43,12 @@ export function DataTable<TData, TValue>({
         []
     )
 
-    const [columnVisibility, setColumnVisibility] =
-        useState<VisibilityState>({})
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+        maintenanceCost: false,
+        startTime: false,
+        endTime: false,
+        otherCost: false,
+    })
 
     const table = useReactTable({
         data,
@@ -58,6 +62,17 @@ export function DataTable<TData, TValue>({
             columnVisibility,
         },
     })
+
+    const toggleColumnVisibility = (columnId: string) => {
+        const column = table.getColumn(columnId)
+        if (column) {
+            setColumnVisibility((prev) => ({
+                ...prev,
+                [columnId]: !prev[columnId],
+            }))
+            column.toggleVisibility()
+        }
+    }
 
     return (
         <div>
