@@ -33,6 +33,7 @@ export interface Driver {
   id?: number;
   name: string;
   contact: string;
+  image: string | null;
   userId: number;
   documents?: DriverDocument[];
 }
@@ -48,14 +49,16 @@ export interface Trip {
   id?: number;
   busId: number;
   driverId: number;
+  bus: Vehicle;
+  driver: Driver;
   userId: number;
   routeFrom: string;
   routeTo: string;
   startTime: Date;
   endTime: Date;
-  fare?: number;
-  maintenanceCost?: number;
-  fuelCost?: number;
-  otherCost?: number;
-  description?: string;
+  fare: number | null;
+  maintenanceCost: number | null;
+  fuelCost: number | null;
+  otherCost: number | null;
+  description: string | null;
 }
