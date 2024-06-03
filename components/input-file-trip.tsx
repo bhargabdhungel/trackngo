@@ -11,7 +11,6 @@ import getAllVehicles from "@/app/actions/vehicle/getAll";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import Loading from "./loading";
 import { Trip } from "@/lib/types";
-import { userAtom } from "@/atoms/user";
 import addTrip from "@/app/actions/trip/add";
 import { toast } from "./ui/use-toast";
 import useAuthClient from "@/hooks/useAuthClient";
