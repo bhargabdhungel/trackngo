@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import { tripsAtom } from "@/atoms/trip";
 import useFetchData from "@/hooks/useFetchData";
 import Loading from "@/components/loading";
+import { Trip } from "@/lib/types";
 
 export default function GetTrips() {
   const [trips, setTrips] = useRecoilState(tripsAtom);
@@ -16,10 +17,19 @@ export default function GetTrips() {
   useFetchData(shouldRun, setTrips, getAllTrips, setLoading);
   if (loading || !trips) return <Loading />;
 
+  function calculateBalance(trips: Trip[]): Trip[] {
+    return trips.map(trip => ({
+      ...trip,
+      balance: trip.fare! - (trip.maintenanceCost! + trip.fuelCost! + trip.otherCost!),
+    }));
+  }
+
+  const updatedTrips: Trip[] = trips ? calculateBalance(trips) : [];
+
   return (
     <>
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={trips} />
+        <DataTable columns={columns} data={updatedTrips} />
       </div>
     </>
   );

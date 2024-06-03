@@ -35,5 +35,9 @@ export const columns: ColumnDef<Trip>[] = [
     {
         accessorKey: "endTime",
         header: "END"
+    },
+    {
+        accessorKey: "balance",
+        header: "BALANCE"
     }
 ]

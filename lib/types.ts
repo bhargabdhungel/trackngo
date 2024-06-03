@@ -59,4 +59,5 @@ export interface Trip {
   fuelCost: number | null;
   otherCost: number | null;
   description: string | null;
+  balance?: number
 }

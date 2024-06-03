@@ -63,17 +63,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const toggleColumnVisibility = (columnId: string) => {
-    const column = table.getColumn(columnId);
-    if (column) {
-      setColumnVisibility((prev) => ({
-        ...prev,
-        [columnId]: !prev[columnId],
-      }));
-      column.toggleVisibility();
-    }
-  };
-
   return (
     <div>
       <div className="flex items-center py-4">
