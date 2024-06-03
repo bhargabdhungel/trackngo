@@ -22,7 +22,6 @@ function DownloadButton({ trips }: { trips: Trip[] }) {
 
   return <Button onClick={handleDownload}>Download</Button>;
 }
-
 export default function GetTrips() {
   const [trips, setTrips] = useRecoilState(tripsAtom);
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,11 +39,20 @@ export default function GetTrips() {
 
   if (loading || !trips) return <Loading />;
 
+  function calculateBalance(trips: Trip[]): Trip[] {
+    return trips.map(trip => ({
+      ...trip,
+      balance: trip.fare! - (trip.maintenanceCost! + trip.fuelCost! + trip.otherCost!),
+    }));
+  }
+
+  const updatedTrips: Trip[] = trips ? calculateBalance(trips) : [];
+
   return (
     <>
       <div className="container mx-auto py-10">
         {/* <DownloadButton trips={trips} /> */}
-        <DataTable columns={columns} data={trips} />
+        <DataTable columns={columns} data={updatedTrips} />
       </div>
     </>
   );

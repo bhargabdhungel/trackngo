@@ -32,8 +32,6 @@ export default async function getAllTrips({
       skip: (page - 1) * 30,
     });
 
-    console.log(trips);
-
     return {
       success: true,
       message: "Trips fetched successfully",

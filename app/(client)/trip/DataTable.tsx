@@ -39,6 +39,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [filterSearchRoute, setFilterSearchRoute] = useState("routeFrom")
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -61,30 +63,40 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const toggleColumnVisibility = (columnId: string) => {
-    const column = table.getColumn(columnId);
-    if (column) {
-      setColumnVisibility((prev) => ({
-        ...prev,
-        [columnId]: !prev[columnId],
-      }));
-      column.toggleVisibility();
-    }
-  };
-
   return (
     <div>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter locations..."
           value={
-            (table.getColumn("routeFrom")?.getFilterValue() as string) ?? ""
+            (table.getColumn(filterSearchRoute)?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("routeFrom")?.setFilterValue(event.target.value)
+            table.getColumn(filterSearchRoute)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-1">
+              Search By
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {["routeFrom", "routeTo"].map((columnId) => (
+              <DropdownMenuCheckboxItem
+                key={columnId}
+                className="capitalize"
+                checked={filterSearchRoute === columnId}
+                onCheckedChange={() => setFilterSearchRoute(columnId)}
+              >
+                {columnId}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -128,9 +140,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
