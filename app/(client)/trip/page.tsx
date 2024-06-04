@@ -11,6 +11,7 @@ import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Trip } from "@/lib/types";
 import * as XLSX from "xlsx";
+import { DateInput } from "@/components/DateInput/DateInput";
 
 function formatDate(date: Date) {
   // Extract parts of the date
@@ -74,7 +75,7 @@ export default function GetTrips() {
   const [trips, setTrips] = useRecoilState(tripsAtom);
   const [loading, setLoading] = useState<boolean>(false);
   const shouldRun = trips ? false : true;
-  const [startDate, setStaratDate] = useState<Date>(new Date("2024-01-01"));
+  const [startDate, setStartDate] = useState<Date>(new Date("2024-01-01"));
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [page, setPage] = useState<number>(1);
   const [updatedTrips, setUpdatedTrips] = useState<Trip[]>(update(trips || []));
@@ -95,6 +96,12 @@ export default function GetTrips() {
     <>
       <div className="container mx-auto py-10">
         <DownloadButton trips={updatedTrips} />
+        <DateInput
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+        />
         <DataTable columns={columns} data={updatedTrips} />
       </div>
     </>

@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { DateInput } from "@/components/DateInput/DateInput";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -99,7 +100,7 @@ export function DataTable<TData, TValue>({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="sm:ml-auto ml-1">
               Columns
             </Button>
           </DropdownMenuTrigger>
@@ -110,7 +111,8 @@ export function DataTable<TData, TValue>({
                 (column) =>
                   column.getCanHide() &&
                   column.id !== "routeFrom" &&
-                  column.id !== "routeTo"
+                  column.id !== "routeTo" &&
+                  column.id !== 'actions'
               )
               .map((column) => {
                 return (
