@@ -1,5 +1,5 @@
 "use client";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { Selector } from "./selector";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import { driversAtom } from "@/atoms/driver";
@@ -21,6 +21,7 @@ export default function InputTrip() {
   const [loading, setLoading] = useState<boolean>(false);
   const shouldFetchVehicles: boolean = vehicles ? false : true;
   const shouldFetchDrivers: boolean = drivers ? false : true;
+
   useFetchData(shouldFetchVehicles, setVehicles, getAllVehicles, setLoading);
   useFetchData(shouldFetchDrivers, setDrivers, getAllDrivers, setLoading);
 

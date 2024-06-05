@@ -5,11 +5,9 @@ import prisma from "@/prisma/db";
 export default async function getAllTrips({
   startDate = new Date("2024-01-01"),
   endDate = new Date(),
-  page = 1,
 }: {
   startDate: Date;
   endDate: Date;
-  page: number;
 }) {
   if (!startDate || !endDate) {
     return {
@@ -28,8 +26,6 @@ export default async function getAllTrips({
           lte: endDate,
         },
       },
-      take: 30,
-      skip: (page - 1) * 30,
     });
 
     return {

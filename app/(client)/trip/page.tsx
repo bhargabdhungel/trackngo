@@ -71,15 +71,15 @@ export default function GetTrips() {
   const [trips, setTrips] = useRecoilState(tripsAtom);
   const [loading, setLoading] = useState<boolean>(false);
   const [shouldRun, setShouldRun] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date>(new Date("2024-01-01"));
+  const [startDate, setStartDate] = useState<Date>(
+    new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
+  );
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const [page, setPage] = useState<number>(1);
   const [updatedTrips, setUpdatedTrips] = useState<Trip[]>(update(trips || []));
 
   useFetchData(shouldRun, setTrips, getAllTrips, setLoading, {
     startDate,
     endDate,
-    page,
   });
 
   useEffect(() => setShouldRun(true), [startDate, endDate]);

@@ -1,4 +1,6 @@
+"use client";
 import {
+  Eye,
   Github,
   LifeBuoy,
   Mail,
@@ -28,20 +30,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import useAuthServer from "@/hooks/useAuthServer";
 import ModeToggle from "./toggle-theme";
 import Logout from "./dropdown/logout";
+import { useRouter } from "next/navigation";
+import useAuthClient from "@/hooks/useAuthClient";
 
-export default async function DropdownMenuProfile(): Promise<JSX.Element> {
-  const user = await useAuthServer();
+export default function DropdownMenuProfile() {
+  const { loading, userData } = useAuthClient();
+  const router = useRouter();
+  if (loading)
+    return (
+      <Avatar className="cursor-pointer">
+        <AvatarImage src="/images/avatar.png" alt="avatar" />
+        <AvatarFallback>user</AvatarFallback>
+      </Avatar>
+    );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={user.image} alt={user.name} />
+          <AvatarImage src={userData.image} alt={userData.name} />
           <AvatarFallback>user</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {/* profile */}
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
@@ -56,54 +69,54 @@ export default async function DropdownMenuProfile(): Promise<JSX.Element> {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        {/* add */}
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/vehicle/addnew")}>
             <Plus className="mr-2 h-4 w-4" />
             <span>Add new vehicle</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/driver/addnew")}>
             <Plus className="mr-2 h-4 w-4" />
             <span>Add new driver</span>
           </DropdownMenuItem>
-
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite users</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
+          <DropdownMenuItem onClick={() => router.push("/trip/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            <span>Add new trip</span>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Github className="mr-2 h-4 w-4" />
-          <span>GitHub</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LifeBuoy className="mr-2 h-4 w-4" />
-          <span>Support</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled className="">
-          <UserCheckIcon className="mr-2 h-4 w-4" />
-          <span>Admin</span>
-        </DropdownMenuItem>
-        <Logout />
+        {/* view */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => router.push("/vehicle")}>
+            <Eye className="mr-2 h-4 w-4" />
+            <span>view vehicles</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/driver")}>
+            <Eye className="mr-2 h-4 w-4" />
+            <span>view drivers</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/trip")}>
+            <Eye className="mr-2 h-4 w-4" />
+            <span>view trips</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        {/* extra */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Github className="mr-2 h-4 w-4" />
+            <span>GitHub</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <LifeBuoy className="mr-2 h-4 w-4" />
+            <span>Support</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled className="">
+            <UserCheckIcon className="mr-2 h-4 w-4" />
+            <span>Admin</span>
+          </DropdownMenuItem>
+          <Logout />
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
