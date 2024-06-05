@@ -23,6 +23,7 @@ export default function VehicleWithId() {
   const vehicle = vehicles?.find(
     (vehicle) => vehicle.id === id && vehicle.documents
   );
+
   if (loading) return <Loading />;
 
   return (

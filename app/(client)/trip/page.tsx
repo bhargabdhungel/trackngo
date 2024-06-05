@@ -34,10 +34,6 @@ function formatDate(date: Date) {
 
 function DownloadButton({ trips }: { trips: Trip[] }) {
   const handleDownload = () => {
-    // Define the keys you want to include in the Excel file
-    const keysToInclude = ["id", "destination", "fare", "balance"]; // Adjust this list as needed
-
-    // Map through the trips and pick only the keys you want
     const filteredTrips = trips.map((trip, index) => {
       const newTrip = {
         sl: index + 1,
