@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./DataTable";
 import getAllTrips from "@/app/actions/trip/getAll";
@@ -70,7 +70,7 @@ function update(trips: Trip[]): Trip[] {
 export default function GetTrips() {
   const [trips, setTrips] = useRecoilState(tripsAtom);
   const [loading, setLoading] = useState<boolean>(false);
-  const shouldRun = trips ? false : true;
+  const [shouldRun, setShouldRun] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date("2024-01-01"));
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [page, setPage] = useState<number>(1);
@@ -82,8 +82,15 @@ export default function GetTrips() {
     page,
   });
 
+  useEffect(() => setShouldRun(true), [startDate, endDate]);
+
   useEffect(() => {
-    setUpdatedTrips(update(trips || []));
+    if (trips) {
+      setShouldRun(false);
+      setUpdatedTrips(update(trips));
+    } else {
+      setShouldRun(true);
+    }
   }, [trips]);
 
   if (loading || !trips) return <Loading />;
