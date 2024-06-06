@@ -71,4 +71,5 @@ export enum Process {
 export interface Document {
   type: string;
   link: string;
+  expiryDate ?: Date;
 }

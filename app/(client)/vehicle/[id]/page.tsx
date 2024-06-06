@@ -10,6 +10,7 @@ import { useRecoilState } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import { Button } from "@/components/ui/button";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
+import { DocumentList } from "@/components/Document/Document";
 
 export default function VehicleWithId() {
   const path = usePathname();
@@ -24,30 +25,37 @@ export default function VehicleWithId() {
     (vehicle) => vehicle.id === id && vehicle.documents
   );
 
+  console.log(vehicle);
+
   if (loading) return <Loading />;
 
   return (
-    <div className="h-full flex flex-col pt-12 items-center">
-      <h2 className="scroll-m-20 border-b pb-12 text-3xl font-semibold tracking-tight first:mt-0">
-        {vehicle?.name}
-      </h2>
-      <h3 className="text-xl font-semibold tracking-tight">Documents</h3>
-      <div className="flex flex-col items-center">
-        {vehicle?.documents?.map((document) => (
-          <div key={document.id} className="flex items-center">
-            <p className="text-lg font-semibold tracking-tight">
-              {document.type}
-            </p>
-          </div>
-        ))}
+    <>
+      <p className="text-center sm:text-4xl text-xl font-semibold mt-10 mx-20">Details</p>
+
+      <hr className="border-t-2 border-gray-300 mx-20 mt-1" />
+
+      <p className="sm:text-3xl text-2xl font-semibold mt-10 mx-20">Name</p>
+      <hr className="border-t-2 border-gray-300 mx-20 mt-1 sm:w-1/2" />      
+      <p className="sm:text-2xl text-lg font-semibold mt-1 mx-20 text-gray-400 hover:underline">{vehicle?.name}</p>
+
+      <div className="mt-10">
+        <p className="mx-20 sm:text-3xl text-2xl font-semibold mb-2">Documents</p>
+        <hr className="border-t-2 border-gray-500 mx-20 mt-2 mb-10" />
+        {vehicle?.documents && <DocumentList documents={vehicle.documents} />}
       </div>
-      <Button
-        onClick={() => {
-          router.push(`/vehicle/${id}/upload`);
-        }}
-      >
-        Upload
-      </Button>
-    </div>
+
+      {/* --------------------- */}
+
+      <div className="h-full flex flex-col pt-12 items-center">
+        <Button
+          onClick={() => {
+            router.push(`/vehicle/${id}/upload`);
+          }}
+        >
+          Upload
+        </Button>
+      </div>
+    </>
   );
 }
