@@ -19,35 +19,26 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import useAuthServer from "@/hooks/useAuthServer";
 import ModeToggle from "./toggle-theme";
 import Logout from "./dropdown/logout";
 import { useRouter } from "next/navigation";
 import useAuthClient from "@/hooks/useAuthClient";
+import Loading from "./loading";
 
 export default function DropdownMenuProfile() {
   const { loading, userData } = useAuthClient();
   const router = useRouter();
-  if (loading)
-    return (
-      <Avatar className="cursor-pointer">
-        <AvatarImage src="/images/avatar.png" alt="avatar" />
-        <AvatarFallback>user</AvatarFallback>
-      </Avatar>
-    );
+  if (loading) return <Loading />;
+  if (!loading && !userData) router.replace("/");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={userData.image} alt={userData.name} />
+          <AvatarImage src={userData?.image} alt={userData?.name} />
           <AvatarFallback>user</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

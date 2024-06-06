@@ -14,6 +14,7 @@ import { Trip } from "@/lib/types";
 import addTrip from "@/app/actions/trip/add";
 import { toast } from "./ui/use-toast";
 import useAuthClient from "@/hooks/useAuthClient";
+import { useRouter } from "next/navigation";
 
 export default function InputTrip() {
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
@@ -21,6 +22,7 @@ export default function InputTrip() {
   const [loading, setLoading] = useState<boolean>(false);
   const shouldFetchVehicles: boolean = vehicles ? false : true;
   const shouldFetchDrivers: boolean = drivers ? false : true;
+  const router = useRouter();
 
   useFetchData(shouldFetchVehicles, setVehicles, getAllVehicles, setLoading);
   useFetchData(shouldFetchDrivers, setDrivers, getAllDrivers, setLoading);
@@ -128,11 +130,14 @@ export default function InputTrip() {
             driverId: parseInt(driverId),
           };
           try {
+            setLoading(true);
             const response = await addTrip(trip);
             toast({
               title: response.message,
               description: response.description,
             });
+            setLoading(false);
+            router.replace("/trip");
           } catch (error) {
             toast({
               title: "Failed to add trip",
