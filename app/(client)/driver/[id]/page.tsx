@@ -8,6 +8,8 @@ import { useRecoilState } from "recoil";
 import { driversAtom } from "@/atoms/driver";
 import { Button } from "@/components/ui/button";
 import getAllDrivers from "@/app/actions/driver/getAll";
+import ImageComponent from "next/image";
+import { DocumentList } from "@/components/Document/Document";
 
 export default function DriverWithId() {
   const path = usePathname();
@@ -22,32 +24,72 @@ export default function DriverWithId() {
     (driver) => driver.id === id && driver.documents
   );
 
-  console.log(driver);
+  const image = driver?.documents?.find(doc => doc.type === "IMAGE")?.link;
 
   if (loading) return <Loading />;
 
   return (
-    <div className="h-full flex flex-col pt-12 items-center">
-      <h2 className="scroll-m-20 border-b pb-12 text-3xl font-semibold tracking-tight first:mt-0">
-        {driver?.name}
-      </h2>
-      <h3 className="text-xl font-semibold tracking-tight">Documents</h3>
-      <div className="flex flex-col items-center">
-        {driver?.documents?.map((document) => (
-          <div key={document.id} className="flex items-center">
-            <p className="text-lg font-semibold tracking-tight">
-              {document.type}
-            </p>
+    <>
+      <p className="text-center sm:text-4xl text-xl font-semibold mt-10 mx-20">Details</p>
+
+      <hr className="border-t-2 border-gray-300 mx-20 mt-1" />
+
+      <div className="md:flex md:flex-row flex flex-col items-center justify-center mx-4 md:mx-20 sm:mt-16 space-y-8 md:space-y-0 md:space-x-8">
+        <div className="flex flex-col w-full md:w-1/2 p-4 md:p-10">
+          <div className="mb-8">
+            <p className="sm:text-2xl text-xl font-semibold mb-2">Name</p>
+            <hr className="border-t-2 border-gray-300" />
+            <p className="mt-2 text-lg text-gray-400 hover:underline">{driver?.name}</p>
           </div>
-        ))}
+
+          <div>
+            <p className="sm:text-2xl text-xl font-semibold mb-2">Contact No.</p>
+            <hr className="border-t-2 border-gray-300" />
+            <p className="mt-2 text-lg text-gray-400 hover:underline">{driver?.contact}</p>
+          </div>
+        </div>
+
+        <div className="w-full md:w-1/2 flex justify-center items-center p-4 md:p-10">
+          {image ? (
+            <div
+              onClick={() => { router.push(image) }}
+              className="cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:shadow-md hover:shadow-white"
+            >
+              <ImageComponent
+                src={image}
+                alt="Driver Image"
+                width={300}
+                height={300}
+                className="object-contain rounded-lg shadow-lg"
+              />
+              <hr />
+              <p className="text-center mt-2 text-xl hover:underline">Image</p>
+            </div>
+          ) : (
+            <div className="w-64 h-64 flex items-center justify-center border rounded-lg shadow-lg bg-gray-100">
+              <span className="text-gray-500">No Image Available</span>
+            </div>
+          )}
+        </div>
       </div>
-      <Button
-        onClick={() => {
-          router.push(`/driver/${id}/upload`);
-        }}
-      >
-        Upload Document
-      </Button>
-    </div>
+
+      <div className="mt-10">
+        <p className="mx-20 sm:text-3xl text-2xl font-semibold mb-2">Documents</p>
+        <hr className="border-t-2 border-gray-500 mx-20 mt-2 mb-10" />
+        {driver?.documents && <DocumentList documents={driver.documents} />}
+      </div>
+
+      {/* ----------------------- */}
+
+      <div className="h-full flex flex-col pt-12 items-center mt-10">
+        <Button
+          onClick={() => {
+            router.push(`/driver/${id}/upload`);
+          }}
+        >
+          Upload Document
+        </Button>
+      </div>
+    </>
   );
 }
