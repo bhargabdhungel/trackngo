@@ -17,9 +17,11 @@ import addDriver from "@/app/actions/driver/add";
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { driversAtom } from "@/atoms/driver";
 import Loading from "./loading";
+import useFetchData from "@/hooks/useFetchData";
+import getAllDrivers from "@/app/actions/driver/getAll";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -33,7 +35,9 @@ const FormSchema = z.object({
 export default function InputDriver() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const setDrivers = useSetRecoilState(driversAtom);
+  const [drivers, setDrivers] = useRecoilState(driversAtom);
+  const shouldRun = drivers ? false : true;
+  useFetchData(shouldRun, setDrivers, getAllDrivers, setLoading);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {

@@ -19,13 +19,14 @@ export async function uploadFile(
 ) {
   try {
     const user = await authCheck();
-    // check if the driver exists and the the driver id belongs to the user
+
     const driver = await prisma.driver.findUnique({
       where: {
         id: driverId,
         userId: user.userId,
       },
     });
+
     if (!driver) {
       return {
         success: false,
@@ -33,42 +34,32 @@ export async function uploadFile(
       };
     }
 
-    const uploadResult = await cloudinary.uploader.upload(base64Data, {
-      resource_type: "image",
-    });
-    const link = uploadResult.secure_url;
-
-    // Delete all duplicates of the document
-
-    const dublicates = await prisma.driverDocument.findMany({
+    // Check for existing documents of the same type and delete them
+    const existingDocuments = await prisma.driverDocument.findMany({
       where: {
         driverId,
         type,
       },
     });
-
-    await prisma.driverDocument.deleteMany({
-      where: {
-        driverId,
-        type,
-      },
-    });
-
-    // delete all duplicates from the cloudinary
 
     await Promise.all(
-      dublicates.map(async (doc) => {
-        const publicId = doc.link?.split("/").pop();
-        if (publicId) {
-          await cloudinary.uploader.destroy(publicId);
-        }
+      existingDocuments.map(async (doc) => {
+        const publicId = doc.link.split("/").pop();
+        await cloudinary.uploader.destroy(publicId!);
+        await prisma.driverDocument.delete({
+          where: { id: doc.id },
+        });
       })
     );
 
-    await prisma.driverDocument.create({
+    const uploadResult = await cloudinary.uploader.upload(base64Data, {
+      resource_type: "image",
+    });
+
+    const newDocument = await prisma.driverDocument.create({
       data: {
         driverId,
-        link,
+        link: uploadResult.secure_url,
         type,
         expiryDate,
       },
@@ -77,8 +68,10 @@ export async function uploadFile(
     return {
       success: true,
       message: "Document uploaded successfully",
+      data: newDocument,
     };
   } catch (error) {
+    console.error("Error uploading document:", error);
     return {
       success: false,
       message: "Error uploading document",
@@ -86,7 +79,7 @@ export async function uploadFile(
   }
 }
 
-export async function deleteFile(id: number) {
+async function deleteFile(id: number) {
   try {
     const user = await authCheck();
 
@@ -137,6 +130,7 @@ export async function deleteFile(id: number) {
       message: "Document deleted successfully",
     };
   } catch (error) {
+    console.error("Error deleting document:", error);
     return {
       success: false,
       message: "Error deleting the document",

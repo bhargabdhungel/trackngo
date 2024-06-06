@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
 import { DriverDocumentType } from "@prisma/client";
@@ -6,6 +7,13 @@ import { Input } from "./ui/input";
 import { Selector } from "./selector";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { uploadFile } from "@/app/actions/doc/driver";
+import { useRecoilState } from "recoil";
+import { driversAtom } from "@/atoms/driver";
+import useFetchData from "@/hooks/useFetchData";
+import getAllDrivers from "@/app/actions/driver/getAll";
+import { readFileAsDataURL } from "./input-file-bus";
+import { Driver } from "@/lib/types";
 
 const driverDocOptions = Object.keys(DriverDocumentType).map((key) => ({
   value: key,
@@ -18,6 +26,10 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
   const [type, setType] = useState<string>("");
   const router = useRouter();
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
+  const [drivers, setDrivers] = useRecoilState(driversAtom);
+  const shouldRun = drivers ? false : true;
+
+  useFetchData(shouldRun, setDrivers, getAllDrivers, setLoading);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -31,7 +43,7 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
     }
   };
 
-  if (loading) return <Loading />;
+  if (loading || !drivers) return <Loading />;
 
   const handleUpload = async () => {
     if (!inputFile) {
@@ -55,21 +67,47 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
       });
       return;
     }
-    setLoading(true);
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      toast({
-        title: "Upload successful",
-        description: "The document has been uploaded successfully",
+      setLoading(true);
+      const fileData = await readFileAsDataURL(inputFile);
+      const res = await uploadFile(
+        fileData,
+        driverId,
+        type as DriverDocumentType,
+        expiryDate
+      );
+
+      const newDrivers: Driver[] = drivers.map((driver: Driver) => {
+        if (driver.id === driverId) {
+          return {
+            ...driver,
+            documents: driver.documents
+              ? [...driver.documents, res.data!]
+              : [res.data!],
+          };
+        } else {
+          return driver;
+        }
       });
-      router.push(`/driver/${driverId}`);
+
+      setDrivers(newDrivers);
+
+      toast({
+        title: res.success
+          ? "File uploaded successfully"
+          : "Error uploading file",
+        description: res.message,
+      });
     } catch (error) {
       toast({
         title: "Upload failed",
         description: "Please try again later",
       });
+      console.error("Error uploading document:", error);
     } finally {
       setLoading(false);
+      router.push(`/driver/${driverId}`);
     }
   };
 

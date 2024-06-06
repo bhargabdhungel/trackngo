@@ -15,11 +15,11 @@ export default function VehicleWithId() {
   const path = usePathname();
   const id = parseInt(path.split("/").pop() as string, 10);
   const router = useRouter();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
   const shouldRun = vehicles ? false : true;
   useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
-
   const vehicle = vehicles?.find(
     (vehicle) => vehicle.id === id && vehicle.documents
   );

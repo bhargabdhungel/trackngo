@@ -14,7 +14,6 @@ export default async function getAllDrivers() {
       userId: true,
       name: true,
       contact: true,
-      image: true,
       documents: true,
     },
   });

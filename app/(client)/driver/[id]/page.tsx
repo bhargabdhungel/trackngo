@@ -21,6 +21,9 @@ export default function DriverWithId() {
   const driver = drivers?.find(
     (driver) => driver.id === id && driver.documents
   );
+
+  console.log(driver);
+
   if (loading) return <Loading />;
 
   return (

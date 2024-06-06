@@ -33,7 +33,6 @@ export interface Driver {
   id?: number;
   name: string;
   contact: string;
-  image?: string | null;
   userId: number;
   documents?: DriverDocument[];
 }
@@ -59,5 +58,12 @@ export interface Trip {
   fuelCost: number | null;
   otherCost: number | null;
   description: string | null;
-  balance?: number
+  balance?: number;
+}
+
+export enum Process {
+  REST = "REST",
+  PENDING = "PENDING",
+  FINISHED = "FINISHED",
+  FAILED = "FAILED",
 }

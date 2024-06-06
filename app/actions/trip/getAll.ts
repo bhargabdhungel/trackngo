@@ -5,9 +5,13 @@ import prisma from "@/prisma/db";
 export default async function getAllTrips({
   startDate = new Date("2024-01-01"),
   endDate = new Date(),
+  driverId = null,
+  vehicleId = null,
 }: {
   startDate: Date;
   endDate: Date;
+  driverId?: number | null;
+  vehicleId?: number | null;
 }) {
   if (!startDate || !endDate) {
     return {
@@ -16,15 +20,27 @@ export default async function getAllTrips({
     };
   }
   const user = await authCheck();
+  if (!user) {
+    return {
+      success: false,
+      message: "User authentication failed",
+    };
+  }
   try {
-    // Fetch trips for the user within the specified date range 30 values per page
+    const whereClause = {
+      userId: user.userId,
+      startTime: {
+        gte: startDate,
+        lte: endDate,
+      },
+      ...(driverId !== null && { driverId }),
+      ...(vehicleId !== null && { vehicleId }),
+    };
+
     const trips = await prisma.trip.findMany({
-      where: {
-        userId: user.userId,
-        startTime: {
-          gte: startDate,
-          lte: endDate,
-        },
+      where: whereClause,
+      orderBy: {
+        startTime: "desc",
       },
     });
 

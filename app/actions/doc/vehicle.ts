@@ -35,41 +35,32 @@ async function uploadFile(
       };
     }
 
-    const uploadResult = await cloudinary.uploader.upload(base64Data, {
-      resource_type: "image",
-    });
-    const link = uploadResult.secure_url;
-
-    // Delete all duplicates of the document
-    const dublicates = await prisma.busDocument.findMany({
+    // Check for existing documents of the same type and delete them
+    const existingDocuments = await prisma.busDocument.findMany({
       where: {
         busId,
         type,
       },
     });
-
-    await prisma.busDocument.deleteMany({
-      where: {
-        busId,
-        type,
-      },
-    });
-
-    // delete all duplicates from the cloudinary
     await Promise.all(
-      dublicates.map(async (doc) => {
-        const publicId = doc.link?.split("/").pop();
-        if (publicId) {
-          await cloudinary.uploader.destroy(publicId);
-        }
+      existingDocuments.map(async (doc) => {
+        const publicId = doc.link.split("/").pop();
+        await cloudinary.uploader.destroy(publicId!);
+        await prisma.busDocument.delete({
+          where: { id: doc.id },
+        });
       })
     );
 
-    await prisma.busDocument.create({
+    const uploadResult = await cloudinary.uploader.upload(base64Data, {
+      resource_type: "image",
+    });
+
+    const newDocument = await prisma.busDocument.create({
       data: {
         busId,
-        link,
-        type: type,
+        link: uploadResult.secure_url,
+        type,
         expiryDate,
       },
     });
@@ -77,6 +68,7 @@ async function uploadFile(
     return {
       success: true,
       message: "File uploaded successfully",
+      data: newDocument,
     };
   } catch (error) {
     console.error("Upload failed:", error);

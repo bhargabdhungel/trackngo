@@ -18,9 +18,11 @@ import addBus from "@/app/actions/vehicle/add";
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import Loading from "./loading";
+import useFetchData from "@/hooks/useFetchData";
+import getAllVehicles from "@/app/actions/vehicle/getAll";
 
 const FormSchema = z.object({
   vehiclename: z.string().min(2, {
@@ -31,13 +33,15 @@ const FormSchema = z.object({
 export default function InputBus() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const setVehicles = useSetRecoilState(vehiclesAtom);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       vehiclename: "",
     },
   });
+  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
+  const shouldRun = vehicles ? false : true;
+  useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {

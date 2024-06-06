@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./DataTable";
 import getAllTrips from "@/app/actions/trip/getAll";
@@ -80,6 +80,8 @@ export default function GetTrips() {
   useFetchData(shouldRun, setTrips, getAllTrips, setLoading, {
     startDate,
     endDate,
+    driverId: null,
+    vehicleId: null,
   });
 
   useEffect(() => setShouldRun(true), [startDate, endDate]);

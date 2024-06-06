@@ -1,12 +1,17 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "./ui/use-toast";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { BusDocumentType } from "@prisma/client";
 import { Selector } from "./selector";
 import { uploadFile } from "@/app/actions/doc/vehicle";
+import { useRecoilState } from "recoil";
+import { vehiclesAtom } from "@/atoms/vehicle";
+import useFetchData from "@/hooks/useFetchData";
+import getAllVehicles from "@/app/actions/vehicle/getAll";
+import { Vehicle } from "@/lib/types";
 
 export function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -30,6 +35,9 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
   const [type, setType] = useState<string>("");
   const busId = vehicleId;
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
+  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
+  const shouldRun = vehicles ? false : true;
+  useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -85,6 +93,20 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
         expiryDate
       );
 
+      const newVehicles: Vehicle[] = vehicles!.map((vehicle: Vehicle) => {
+        if (vehicle.id === busId) {
+          return {
+            ...vehicle,
+            documents: vehicle.documents
+              ? [...vehicle.documents, res.data!]
+              : [res.data!],
+          };
+        } else {
+          return vehicle;
+        }
+      });
+      setVehicles(newVehicles);
+
       toast({
         title: res.success
           ? "File uploaded successfully"
@@ -110,7 +132,7 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
     label: key,
   }));
 
-  if (loading) return <div>Loading...</div>;
+  if (loading || !vehicles) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col gap-8 w-5/6 items-center">
