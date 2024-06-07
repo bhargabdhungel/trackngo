@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { DatePicker } from "./DatePicker";
+import { useState } from "react";
 
 interface DateInputProps {
   startDate: Date;
@@ -25,6 +26,8 @@ export function DateInput({
   onStartDateChange,
   onEndDateChange,
 }: DateInputProps) {
+  const [localStartDate, setLocalStartDate] = useState(startDate);
+  const [localEndDate, setLocalEndDate] = useState(endDate);
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -44,20 +47,22 @@ export function DateInput({
             <Label htmlFor="name" className="text-left">
               Start Time
             </Label>
-            <DatePicker date={startDate} setDate={onStartDateChange} />
+            <DatePicker date={localStartDate} setDate={setLocalStartDate} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-left">
               End Time
             </Label>
-            <DatePicker date={endDate} setDate={onEndDateChange} />
+            <DatePicker date={localEndDate} setDate={setLocalEndDate} />
           </div>
         </div>
         <SheetFooter>
           <SheetClose asChild>
             <Button
+              className="w-full"
               onClick={() => {
-                console.log(startDate, endDate);
+                onStartDateChange(localStartDate);
+                onEndDateChange(localEndDate);
               }}
             >
               Filter

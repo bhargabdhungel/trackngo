@@ -130,11 +130,11 @@ export const columns: ColumnDef<Trip>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <Link href={`/trip/${row.original.id}/update`} className="w-full">
                 Update
               </Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuItem>
               <DeleteTrip id={row.original.id!} />
             </DropdownMenuItem>
