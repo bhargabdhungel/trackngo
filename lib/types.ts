@@ -61,6 +61,23 @@ export interface Trip {
   balance?: number;
 }
 
+export interface FormattedTrip {
+  id?: number;
+  busId: number;
+  driverId: number;
+  userId: number;
+  routeFrom: string;
+  routeTo: string;
+  startTime: string;
+  endTime: string;
+  fare: number | null;
+  maintenanceCost: number | null;
+  fuelCost: number | null;
+  otherCost: number | null;
+  description: string | null;
+  balance?: number;
+}
+
 export enum Process {
   REST = "REST",
   PENDING = "PENDING",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Trip } from "@/lib/types";
+import { FormattedTrip, Trip } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -78,7 +78,7 @@ function DeleteTrip({ id }: { id: number }) {
   );
 }
 
-export const columns: ColumnDef<Trip>[] = [
+export const columns: ColumnDef<FormattedTrip>[] = [
   {
     accessorKey: "routeFrom",
     header: "FROM",

@@ -9,28 +9,10 @@ import { tripsAtom } from "@/atoms/trip";
 import useFetchData from "@/hooks/useFetchData";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
-import { Trip } from "@/lib/types";
+import { FormattedTrip, Trip } from "@/lib/types";
 import * as XLSX from "xlsx";
 import { DateInput } from "@/components/DateInput/DateInput";
-
-function formatDate(date: Date) {
-  // Extract parts of the date
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const day = date.getDate();
-  const month = date.toLocaleString("default", { month: "short" });
-  const year = date.getFullYear();
-
-  // Determine AM or PM suffix
-  const ampm = hours >= 12 ? "pm" : "am";
-
-  // Format hours for 12-hour format
-  const formattedHour = hours % 12 || 12; // Convert 0 to 12 for 12-hour time
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes; // Ensure two digits for minutes
-
-  // Construct the formatted date string
-  return `${formattedHour}.${formattedMinutes}${ampm} ${month} ${day} ${year}`;
-}
+import { format } from "date-fns";
 
 function DownloadButton({ trips }: { trips: Trip[] }) {
   const handleDownload = () => {
@@ -39,8 +21,8 @@ function DownloadButton({ trips }: { trips: Trip[] }) {
         sl: index + 1,
         startLocation: trip.routeFrom,
         endLocation: trip.routeTo,
-        startTime: formatDate(trip.startTime),
-        endTime: formatDate(trip.endTime),
+        startTime: format(trip.startTime, "dd/MM/yy, hh:mm a"),
+        endTime: format(trip.endTime, "dd/MM/yy, hh:mm a"),
         fare: trip.fare,
         maintenance: trip.maintenanceCost,
         fuel: trip.fuelCost,
@@ -67,6 +49,14 @@ function update(trips: Trip[]): Trip[] {
   }));
 }
 
+function formatTrips(trips: Trip[]): FormattedTrip[] {
+  return trips.map((trip) => ({
+    ...trip,
+    startTime: format(trip.startTime, "dd/MM/yy, hh:mm a"),
+    endTime: format(trip.endTime, "dd/MM/yy, hh:mm a"),
+  }));
+}
+
 export default function GetTrips() {
   const [trips, setTrips] = useRecoilState(tripsAtom);
   const [loading, setLoading] = useState<boolean>(false);
@@ -76,6 +66,8 @@ export default function GetTrips() {
   );
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [updatedTrips, setUpdatedTrips] = useState<Trip[]>(update(trips || []));
+
+  const [formattedTrips, setFormattedTrips] = useState<FormattedTrip[]>([]);
 
   useFetchData(shouldRun, setTrips, getAllTrips, setLoading, {
     startDate,
@@ -89,7 +81,9 @@ export default function GetTrips() {
   useEffect(() => {
     if (trips) {
       setShouldRun(false);
-      setUpdatedTrips(update(trips));
+      const updated = update(trips);
+      setUpdatedTrips(updated);
+      setFormattedTrips(formatTrips(updated));
     } else {
       setShouldRun(true);
     }
@@ -107,7 +101,7 @@ export default function GetTrips() {
           onStartDateChange={setStartDate}
           onEndDateChange={setEndDate}
         />
-        <DataTable columns={columns} data={updatedTrips} />
+        <DataTable columns={columns} data={formattedTrips} />
       </div>
     </>
   );
