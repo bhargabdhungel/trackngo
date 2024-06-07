@@ -67,3 +67,9 @@ export enum Process {
   FINISHED = "FINISHED",
   FAILED = "FAILED",
 }
+
+export interface Document {
+  type: string;
+  link: string;
+  expiryDate ?: Date;
+}
