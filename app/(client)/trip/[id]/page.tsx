@@ -47,10 +47,11 @@ export default function TripDetails() {
       </div>
 
       <div className="mx-16 mt-8 flex flex-wrap gap-4 items-center justify-center">
-        <div className="flex flex-col p-2 rounded-lg shadow-md  w-full">
+        {trip.description && <div className="flex flex-col p-2 rounded-lg shadow-md  w-full">
           <label className="font-semibold">Description:</label>
           <p className="p-2 mt-1 border rounded">{trip.description}</p>
-        </div>
+        </div>}
+
         <div className="flex flex-col p-2 rounded-lg shadow-md items-center justify-center">
           <label className="font-semibold">Start Date:</label>
           <p className="p-2 mt-1 border rounded w-32 text-center">{formatDate(trip.startTime)}</p>
@@ -59,6 +60,7 @@ export default function TripDetails() {
           <label className="font-semibold">Start Time:</label>
           <p className="p-2 mt-1 border rounded w-32 text-center">{formatTime(trip.startTime)}</p>
         </div>
+
         <div className="flex flex-col p-2 rounded-lg shadow-md items-center justify-center">
           <label className="font-semibold">End Date:</label>
           <p className="p-2 mt-1 border rounded w-32 text-center">{formatDate(trip.endTime)}</p>
@@ -67,21 +69,22 @@ export default function TripDetails() {
           <label className="font-semibold">End Time:</label>
           <p className="p-2 mt-1 border rounded w-32 text-center">{formatTime(trip.endTime)}</p>
         </div>
+
         <div className="flex flex-col p-2 rounded-lg shadow-md items-center justify-center">
           <label className="font-semibold">Fare:</label>
-          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.fare}</p>
+          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.fare ? trip.fare : 0}</p>
         </div>
         <div className="flex flex-col p-2 rounded-lg shadow-md items-center justify-center">
           <label className="font-semibold">Fuel Cost:</label>
-          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.fuelCost}</p>
+          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.fuelCost ? trip.fuelCost : 0}</p>
         </div>
         <div className="flex flex-col p-2 rounded-lg shadow-md items-center justify-center">
           <label className="font-semibold">Maintenance Cost:</label>
-          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.maintenanceCost}</p>
+          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.maintenanceCost ? trip.maintenanceCost : 0}</p>
         </div>
         <div className="flex flex-col p-2 rounded-lg shadow-md items-center justify-center">
           <label className="font-semibold">Other Expenses:</label>
-          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.otherCost}</p>
+          <p className="p-2 mt-1 border rounded w-32 text-center">{trip.otherCost ? trip.otherCost : 0}</p>
         </div>
       </div>
     </>
