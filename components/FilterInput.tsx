@@ -107,7 +107,7 @@ export function FilterInput({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="ml-1">
+        <Button variant="outline" className="ml-2">
           Please add your filters
         </Button>
       </SheetTrigger>

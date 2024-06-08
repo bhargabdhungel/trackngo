@@ -5,8 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
   VisibilityState,
 } from "@tanstack/react-table";
 
@@ -41,8 +39,6 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [filterSearchRoute, setFilterSearchRoute] = useState("routeFrom");
 
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     maintenanceCost: false,
     startTime: false,
@@ -54,11 +50,8 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     state: {
-      columnFilters,
       columnVisibility,
     },
   });
@@ -66,43 +59,9 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter locations..."
-          value={
-            (table.getColumn(filterSearchRoute)?.getFilterValue() as string) ??
-            ""
-          }
-          onChange={(event) =>
-            table
-              .getColumn(filterSearchRoute)
-              ?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-1">
-              Search By
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {["routeFrom", "routeTo"].map((columnId) => (
-              <DropdownMenuCheckboxItem
-                key={columnId}
-                className="capitalize"
-                checked={filterSearchRoute === columnId}
-                onCheckedChange={() => setFilterSearchRoute(columnId)}
-              >
-                {columnId}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="sm:ml-auto ml-1">
+            <Button variant="outline" className="sm:ml-auto ml-0">
               Columns
             </Button>
           </DropdownMenuTrigger>
