@@ -105,6 +105,7 @@ export default function GetTrips() {
         onDriverIdChange={setDriverId}
         onVehicleIdChange={setVehicleId}
       />
+      
       <DataTable columns={columns} data={updatedTrips} />
     </div>
   );
