@@ -19,10 +19,10 @@ export function Selector({
 }: SelectorProps) {
   return (
     <Select onValueChange={setSelected}>
-      <SelectTrigger>
-        <SelectValue placeholder={placeholder} />
+      <SelectTrigger className="w-2/3">
+        <SelectValue placeholder={placeholder} className="w-full" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="w-full">
         <SelectGroup>
           <SelectLabel>{label}</SelectLabel>
           {options.map((option) => (

@@ -27,18 +27,33 @@ export default async function getAllTrips({
     };
   }
   try {
-    const whereClause = {
+    const whereClause: {
+      userId: number;
+      startTime: {
+        gte: Date;
+        lte: Date;
+      };
+      driverId?: number;
+      busId?: number;
+    } = {
       userId: user.userId,
       startTime: {
         gte: startDate,
         lte: endDate,
       },
-      ...(driverId !== null && { driverId }),
-      ...(vehicleId !== null && { vehicleId }),
     };
+
+    if (driverId !== null) {
+      whereClause.driverId = driverId;
+    }
+
+    if (vehicleId !== null) {
+      whereClause.busId = vehicleId;
+    }
 
     const trips = await prisma.trip.findMany({
       where: whereClause,
+
       orderBy: {
         startTime: "desc",
       },
@@ -50,6 +65,7 @@ export default async function getAllTrips({
       data: trips,
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to fetch trips",

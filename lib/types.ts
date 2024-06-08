@@ -51,8 +51,8 @@ export interface Trip {
   userId: number;
   routeFrom: string;
   routeTo: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: Date | string;
+  endTime: Date | string;
   fare: number | null;
   maintenanceCost: number | null;
   fuelCost: number | null;
@@ -88,5 +88,5 @@ export enum Process {
 export interface Document {
   type: string;
   link: string;
-  expiryDate ?: Date;
+  expiryDate?: Date;
 }

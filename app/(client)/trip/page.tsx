@@ -9,10 +9,11 @@ import { tripsAtom } from "@/atoms/trip";
 import useFetchData from "@/hooks/useFetchData";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
-import { FormattedTrip, Trip } from "@/lib/types";
+import { Trip } from "@/lib/types";
 import * as XLSX from "xlsx";
-import { DateInput } from "@/components/DateInput/DateInput";
-import { format } from "date-fns";
+import { FilterInput } from "@/components/FilterInput";
+import { format, set } from "date-fns";
+import { Filter } from "lucide-react";
 
 function DownloadButton({ trips }: { trips: Trip[] }) {
   const handleDownload = () => {
@@ -46,14 +47,13 @@ function update(trips: Trip[]): Trip[] {
     ...trip,
     balance:
       trip.fare! - (trip.maintenanceCost! + trip.fuelCost! + trip.otherCost!),
-  }));
-}
-
-function formatTrips(trips: Trip[]): FormattedTrip[] {
-  return trips.map((trip) => ({
-    ...trip,
     startTime: format(trip.startTime, "dd/MM/yy, hh:mm a"),
     endTime: format(trip.endTime, "dd/MM/yy, hh:mm a"),
+    fare: trip.fare ? trip.fare : 0,
+    maintenanceCost: trip.maintenanceCost ? trip.maintenanceCost : 0,
+    fuelCost: trip.fuelCost ? trip.fuelCost : 0,
+    otherCost: trip.otherCost ? trip.otherCost : 0,
+    description: trip.description ? trip.description : "No description",
   }));
 }
 
@@ -66,24 +66,24 @@ export default function GetTrips() {
   );
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [updatedTrips, setUpdatedTrips] = useState<Trip[]>(update(trips || []));
-
-  const [formattedTrips, setFormattedTrips] = useState<FormattedTrip[]>([]);
+  const [driverId, setDriverId] = useState<number | null>(null);
+  const [vehicleId, setVehicleId] = useState<number | null>(null);
 
   useFetchData(shouldRun, setTrips, getAllTrips, setLoading, {
     startDate,
     endDate,
-    driverId: null,
-    vehicleId: null,
+    driverId,
+    vehicleId,
   });
 
-  useEffect(() => setShouldRun(true), [startDate, endDate]);
+  useEffect(() => {
+    setShouldRun(true);
+  }, [startDate, endDate, driverId, vehicleId, setTrips]);
 
   useEffect(() => {
     if (trips) {
       setShouldRun(false);
-      const updated = update(trips);
-      setUpdatedTrips(updated);
-      setFormattedTrips(formatTrips(updated));
+      setUpdatedTrips(update(trips));
     } else {
       setShouldRun(true);
     }
@@ -94,13 +94,18 @@ export default function GetTrips() {
   return (
     <div className="container mx-auto py-10">
       <DownloadButton trips={updatedTrips} />
-      <DateInput
+
+      <FilterInput
         startDate={startDate}
         endDate={endDate}
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
+        driverId={driverId}
+        vehicleId={vehicleId}
+        onDriverIdChange={setDriverId}
+        onVehicleIdChange={setVehicleId}
       />
-      <DataTable columns={columns} data={formattedTrips} />
+      <DataTable columns={columns} data={updatedTrips} />
     </div>
   );
 }

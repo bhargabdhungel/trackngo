@@ -9,25 +9,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Label } from "../ui/label";
 
 interface DatePickerProps {
   date: Date;
   setDate: (date: Date) => void;
+  placeholder?: string;
 }
 
-export function DatePicker({ date, setDate }: DatePickerProps) {
+export function DatePicker({ date, setDate, placeholder }: DatePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false); // State to manage popover visibility
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild className="w-2/3">
         <Button
           variant="outline"
           className={cn(
-            "w-[180px] sm:w-[250px] justify-start text-left font-normal",
+            "justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
-          onClick={() => setIsOpen(true)} // Open the popover on button click
+          onClick={() => setIsOpen(true)}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "PPP") : <span>Pick a date</span>}

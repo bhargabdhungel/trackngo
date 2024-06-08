@@ -78,7 +78,7 @@ function DeleteTrip({ id }: { id: number }) {
   );
 }
 
-export const columns: ColumnDef<FormattedTrip>[] = [
+export const columns: ColumnDef<Trip>[] = [
   {
     accessorKey: "routeFrom",
     header: "FROM",

@@ -29,7 +29,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { DateInput } from "@/components/DateInput/DateInput";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,7 +39,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [filterSearchRoute, setFilterSearchRoute] = useState("routeFrom")
+  const [filterSearchRoute, setFilterSearchRoute] = useState("routeFrom");
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -70,10 +69,13 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder="Filter locations..."
           value={
-            (table.getColumn(filterSearchRoute)?.getFilterValue() as string) ?? ""
+            (table.getColumn(filterSearchRoute)?.getFilterValue() as string) ??
+            ""
           }
           onChange={(event) =>
-            table.getColumn(filterSearchRoute)?.setFilterValue(event.target.value)
+            table
+              .getColumn(filterSearchRoute)
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -112,7 +114,7 @@ export function DataTable<TData, TValue>({
                   column.getCanHide() &&
                   column.id !== "routeFrom" &&
                   column.id !== "routeTo" &&
-                  column.id !== 'actions'
+                  column.id !== "actions"
               )
               .map((column) => {
                 return (
@@ -142,9 +144,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}

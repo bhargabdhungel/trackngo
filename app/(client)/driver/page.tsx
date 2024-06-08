@@ -20,21 +20,7 @@ export default function Commands() {
   const [loading, setLoading] = useState(false);
   const [drivers, setDrivers] = useRecoilState(driversAtom);
   const shouldRun = drivers ? false : true;
-
   useFetchData(shouldRun, setDrivers, getAllDrivers, setLoading);
-
-  // useEffect(() => {
-  //   async function fetchDrivers() {
-  //     setLoading(true);
-  //     const response = await getAllDrivers();
-  //     console.log(response);
-  //     if (response.success) {
-  //       // setDrivers(response.data);
-  //     }
-  //     setLoading(false);
-  //   }
-  //   fetchDrivers();
-  // }, []);
 
   if (loading) return <Loading />;
 
