@@ -98,17 +98,15 @@ export default function GetTrips() {
   if (loading || !trips) return <Loading />;
 
   return (
-    <>
-      <div className="container mx-auto py-10">
-        <DownloadButton trips={updatedTrips} />
-        <DateInput
-          startDate={startDate}
-          endDate={endDate}
-          onStartDateChange={setStartDate}
-          onEndDateChange={setEndDate}
-        />
-        <DataTable columns={columns} data={updatedTrips} />
-      </div>
-    </>
+    <div className="container mx-auto py-10">
+      <DownloadButton trips={updatedTrips} />
+      <DateInput
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+      />
+      <DataTable columns={columns} data={updatedTrips} />
+    </div>
   );
 }
