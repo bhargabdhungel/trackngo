@@ -5,8 +5,6 @@ import authCheck from "../auth/authCheck";
 
 export default async function addTrip(trip: Trip) {
   const user = await authCheck();
-  console.log(user);
-  console.log(trip);
   if (user.userId !== trip.userId) {
     return {
       success: false,
@@ -15,19 +13,20 @@ export default async function addTrip(trip: Trip) {
   }
 
   try {
-    await prisma.trip.create({
+    const res: Trip = await prisma.trip.create({
       data: trip,
     });
     return {
       success: true,
       message: "Trip added successfully",
-      data: trip,
+      data: res,
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       message: "Failed to add trip",
-      description: JSON.stringify(error),
+      description: "Try again",
     };
   }
 }

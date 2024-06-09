@@ -15,17 +15,22 @@ import addTrip from "@/app/actions/trip/add";
 import { toast } from "./ui/use-toast";
 import useAuthClient from "@/hooks/useAuthClient";
 import { useRouter } from "next/navigation";
+import { tripsAtom } from "@/atoms/trip";
+import getAllTrips from "@/app/actions/trip/getAll";
 
 export default function InputTrip() {
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
   const [drivers, setDrivers] = useRecoilState(driversAtom);
+  const [trips, setTrips] = useRecoilState(tripsAtom);
   const [loading, setLoading] = useState<boolean>(false);
   const shouldFetchVehicles: boolean = vehicles ? false : true;
   const shouldFetchDrivers: boolean = drivers ? false : true;
+  const shouldFetchTrips: boolean = trips ? false : true;
   const router = useRouter();
 
   useFetchData(shouldFetchVehicles, setVehicles, getAllVehicles, setLoading);
   useFetchData(shouldFetchDrivers, setDrivers, getAllDrivers, setLoading);
+  useFetchData(shouldFetchTrips, setTrips, getAllTrips, setLoading, {});
 
   const driverOptions =
     drivers?.map((driver) => ({
@@ -132,17 +137,23 @@ export default function InputTrip() {
           try {
             setLoading(true);
             const response = await addTrip(trip);
+            if (!response.data) throw new Error("Failed to add trip");
+
             toast({
               title: response.message,
               description: response.description,
             });
-            setLoading(false);
-            router.replace("/trip");
+            setTrips((trips) =>
+              trips ? [...trips, response.data] : [response.data]
+            );
           } catch (error) {
             toast({
               title: "Failed to add trip",
               description: JSON.stringify(error),
             });
+          } finally {
+            router.replace("/trip");
+            setLoading(false);
           }
         }}
       >

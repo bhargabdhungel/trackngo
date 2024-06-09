@@ -3,13 +3,13 @@ import authCheck from "../auth/authCheck";
 import prisma from "@/prisma/db";
 
 export default async function getAllTrips({
-  startDate = new Date("2024-01-01"),
-  endDate = new Date(),
+  startDate = new Date("1024-01-01"),
+  endDate = new Date("3024-01-01"),
   driverId = null,
   vehicleId = null,
 }: {
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date;
+  endDate?: Date;
   driverId?: number | null;
   vehicleId?: number | null;
 }) {
@@ -20,12 +20,6 @@ export default async function getAllTrips({
     };
   }
   const user = await authCheck();
-  if (!user) {
-    return {
-      success: false,
-      message: "User authentication failed",
-    };
-  }
   try {
     const whereClause: {
       userId: number;
@@ -53,7 +47,6 @@ export default async function getAllTrips({
 
     const trips = await prisma.trip.findMany({
       where: whereClause,
-
       orderBy: {
         startTime: "desc",
       },
