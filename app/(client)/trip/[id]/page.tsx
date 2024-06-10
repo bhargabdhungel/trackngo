@@ -207,10 +207,7 @@ export default function TripDetails() {
         </CardContent>
         <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
           <div className="text-xs text-muted-foreground">
-            {/* Updated <time dateTime="2023-11-23">November 23, 2023</time> */}
-            {/* Updated{" "} */}
-            {/* <time>{format(updatedTrip.updatedAt, "dd/MM/yy, hh:mm a")}</time> */}
-            @ tracked by TracknGo
+            {updatedTrip.description}@ tracked by TracknGo
           </div>
         </CardFooter>
       </Card>

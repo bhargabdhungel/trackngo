@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -11,51 +12,58 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { DatePicker } from "./DateInput/DatePicker";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Selector } from "./selector";
-import { useRecoilState } from "recoil";
-import { vehiclesAtom } from "@/atoms/vehicle";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  vehicleIdAtom,
+  vehicleOptionsSelector,
+  vehicleSelector,
+  vehiclesAtom,
+} from "@/atoms/vehicle";
 import useFetchData from "@/hooks/useFetchData";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
-import { driversAtom } from "@/atoms/driver";
+import {
+  driverIdAtom,
+  driverOptionsSelector,
+  driverSelector,
+  driversAtom,
+} from "@/atoms/driver";
 import getAllDrivers from "@/app/actions/driver/getAll";
+import { tripsAtom } from "@/atoms/trip";
+import getAllTrips from "@/app/actions/trip/getAll";
 
-interface FilterProps {
-  startDate: Date;
-  endDate: Date;
-  vehicleId: number | null;
-  driverId: number | null;
-  onStartDateChange: (newStartDate: Date) => void;
-  onEndDateChange: (newEndDate: Date) => void;
-  onVehicleIdChange: (newVehicleId: number | null) => void;
-  onDriverIdChange: (newDriverId: number | null) => void;
-}
+export default function FilterInput() {
+  const date: Date = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
+  const [localStartDate, setLocalStartDate] = useState<Date>(date);
+  const [localEndDate, setLocalEndDate] = useState(new Date());
+  const [localVehicleId, setLocalVehicleId] = useState<string | null>(null);
+  const [localDriverId, setLocalDriverId] = useState<string | null>(null);
+  const [vehicleId, setVehicleId] = useRecoilState(vehicleIdAtom);
+  const [driverId, setDriverId] = useRecoilState(driverIdAtom);
+  const [startDate, setStartDate] = useState(localStartDate);
+  const [endDate, setEndDate] = useState(localEndDate);
 
-export function FilterInput({
-  startDate,
-  endDate,
-  vehicleId,
-  driverId,
-  onStartDateChange,
-  onEndDateChange,
-  onVehicleIdChange,
-  onDriverIdChange,
-}: FilterProps) {
-  const [localStartDate, setLocalStartDate] = useState(startDate);
-  const [localEndDate, setLocalEndDate] = useState(endDate);
-  const [localVehicleId, setLocalVehicleId] = useState<string | null>(
-    vehicleId ? vehicleId.toString() : null
-  );
-  const [localDriverId, setLocalDriverId] = useState<string | null>(
-    driverId ? driverId.toString() : null
-  );
   const [loadingVehicles, setLoadingVehicles] = useState<boolean>(false);
   const [loadingDrivers, setLoadingDrivers] = useState<boolean>(false);
+  const [loadingTrips, setLoadingTrips] = useState<boolean>(false);
+
   const [shouldRunVehicles, setShouldRunVehicles] = useState<boolean>(false);
   const [shouldRunDrivers, setShouldRunDrivers] = useState<boolean>(false);
+  const [shouldRunTrips, setShouldRunTrips] = useState<boolean>(false);
 
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
   const [drivers, setDrivers] = useRecoilState(driversAtom);
+  const [trips, setTrips] = useRecoilState(tripsAtom);
+
+  const vehicleOptions = useRecoilValue(vehicleOptionsSelector);
+  const driverOptions = useRecoilValue(driverOptionsSelector);
+
+  const vehicle = useRecoilValue(vehicleSelector);
+  const driver = useRecoilValue(driverSelector);
+
+  const [open, setOpen] = useState<boolean>(false);
+
   useFetchData(
     shouldRunVehicles,
     setVehicles,
@@ -63,6 +71,12 @@ export function FilterInput({
     setLoadingVehicles
   );
   useFetchData(shouldRunDrivers, setDrivers, getAllDrivers, setLoadingDrivers);
+  useFetchData(shouldRunTrips, setTrips, getAllTrips, setLoadingTrips, {
+    startDate,
+    endDate,
+    vehicleId,
+    driverId,
+  });
 
   useEffect(() => {
     if (vehicles) setShouldRunVehicles(false);
@@ -74,49 +88,28 @@ export function FilterInput({
     else setShouldRunDrivers(true);
   }, [drivers]);
 
-  const vehicleOptions = useMemo(() => {
-    if (!vehicles) return [];
-    return vehicles.map((vehicle) => ({
-      value: vehicle.id?.toString() as string,
-      label: vehicle.name,
-    }));
-  }, [vehicles]);
-
-  const driverOptions = useMemo(() => {
-    if (!drivers) return [];
-    return drivers!.map((driver) => ({
-      value: driver.id?.toString() as string,
-      label: driver.name,
-    }));
-  }, [drivers]);
-
-  const vehileName = useMemo(() => {
-    if (!vehicles) return "";
-    if (!vehicleId) return "";
-    return vehicles.find((vehicle) => vehicle.id === vehicleId)?.name;
-  }, [vehicles, vehicleId]);
-
-  const driverName = useMemo(() => {
-    if (!drivers) return "";
-    if (!driverId) return "";
-    return drivers.find((driver) => driver.id === driverId)?.name;
-  }, [drivers, driverId]);
+  useEffect(() => {
+    if (trips) setShouldRunTrips(false);
+    else setShouldRunTrips(true);
+  }, [trips]);
 
   if (loadingVehicles || loadingDrivers) return null;
 
   return (
-    <Sheet>
+    <Sheet open={open}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="ml-2">
-          Please add your filters
+        <Button
+          variant="outline"
+          className="ml-2"
+          onClick={() => setOpen(true)}
+        >
+          {loadingTrips ? "Filtering trips..." : "Filter"}
         </Button>
       </SheetTrigger>
       <SheetContent side={"left"}>
         <SheetHeader>
           <SheetTitle>Filter</SheetTitle>
-          <SheetDescription>
-            Please enter start date and end date.
-          </SheetDescription>
+          <SheetDescription>Please add your filters</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 py-4">
           <div className="flex items-center gap-4">
@@ -138,7 +131,9 @@ export function FilterInput({
             <Selector
               options={vehicleOptions}
               label="Vehicle"
-              placeholder={vehileName ? vehileName : "Select a vehicle"}
+              placeholder={
+                vehicle && vehicleId ? vehicle.name : "Select a vehicle"
+              }
               setSelected={setLocalVehicleId}
             />
           </div>
@@ -149,28 +144,47 @@ export function FilterInput({
             <Selector
               options={driverOptions}
               label="Driver"
-              placeholder={driverName ? driverName : "Select a driver"}
+              placeholder={driver && driverId ? driver.name : "Select a driver"}
               setSelected={setLocalDriverId}
             />
           </div>
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button
-              className="w-full"
-              onClick={() => {
-                onStartDateChange(localStartDate);
-                onEndDateChange(localEndDate);
-                onVehicleIdChange(
-                  localVehicleId ? parseInt(localVehicleId, 10) : null
-                );
-                onDriverIdChange(
-                  localDriverId ? parseInt(localDriverId, 10) : null
-                );
-              }}
-            >
-              Filter
-            </Button>
+            <>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => {
+                  setLocalStartDate(date);
+                  setStartDate(date);
+                  setLocalEndDate(new Date());
+                  setEndDate(new Date());
+                  setLocalDriverId(null);
+                  setVehicleId(null);
+                  setLocalVehicleId(null);
+                  setDriverId(null);
+                  setShouldRunTrips(true);
+                  setOpen(false);
+                }}
+              >
+                Reset
+              </Button>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  if (localVehicleId)
+                    setVehicleId(parseInt(localVehicleId as string, 10));
+                  if (localDriverId)
+                    setDriverId(parseInt(localDriverId as string, 10));
+
+                  setShouldRunTrips(true);
+                  setOpen(false);
+                }}
+              >
+                Apply
+              </Button>
+            </>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

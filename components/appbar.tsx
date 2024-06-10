@@ -1,26 +1,16 @@
-import ButtonSignOut from "./buttons/SignOut";
-import ModeToggle from "./toggle-theme";
-import Profile from "./profile";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "./ui/sheet";
-
-import CommandDemo from "./command";
+import FilterInput from "./FilterInput";
 import DropdownMenuDemo from "./dropdownForProfile";
+import DownloadButton from "@/app/(client)/trip/Download";
 
 export default function AppBar() {
   return (
     <div className="flex justify-between items-center h-16 px-4">
-      <div>
-        <DropdownMenuDemo />
-      </div>
+      <DropdownMenuDemo />
       <nav>
-        <ul className="flex gap-4 items-center"></ul>
+        <ul className="flex gap-4 items-center">
+          <FilterInput />
+          <DownloadButton />
+        </ul>
       </nav>
     </div>
   );
