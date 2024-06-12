@@ -26,6 +26,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import Link from "next/link";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -55,9 +56,12 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center py-4">
+        <Button className="mr-auto">
+          <Link href={"/trip/add"}>Add a Trip</Link>
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="sm:ml-auto ml-0">
+            <Button variant="outline" className="sm:ml-auto">
               Columns
             </Button>
           </DropdownMenuTrigger>
@@ -99,9 +103,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
