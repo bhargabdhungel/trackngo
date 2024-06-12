@@ -1,15 +1,84 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import useFetchData from "@/hooks/useFetchData";
 import Loading from "@/components/loading";
-import { useRecoilState } from "recoil";
-import { driversAtom } from "@/atoms/driver";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { driverIdAtom, driverSelector, driversAtom } from "@/atoms/driver";
 import { Button } from "@/components/ui/button";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import ImageComponent from "next/image";
 import { DocumentList } from "@/components/Document/Document";
+import deleteDriver from "@/app/actions/driver/deleteDriver";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "@/components/ui/use-toast";
+
+function DeleteDriverById({ id }: { id: number }) {
+  const router = useRouter();
+  const setDrivers = useSetRecoilState(driversAtom);
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger
+        className="border py-2 px-4 rounded-md hover:bg-white hover:bg-opacity-10"
+        onClick={(event) => event.stopPropagation()}
+      >
+        Delete
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the driver, its documents and trips.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              try {
+                const response = await deleteDriver(id);
+                if (response.success) {
+                  toast({
+                    title: "Driver deleted",
+                  });
+
+                  setDrivers((prevDrivers) => prevDrivers!.filter(driver => driver.id !== id));
+
+                  router.push("/driver");
+                } else {
+                  toast({
+                    title: response.message,
+                  });
+                  router.push("/driver");
+                }
+              } catch (error) {
+                toast({
+                  title: "Server error",
+                });
+                router.push("/driver");
+              }
+            }}
+          >
+            {" "}
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 export default function DriverWithId() {
   const path = usePathname();
@@ -17,16 +86,30 @@ export default function DriverWithId() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [drivers, setDrivers] = useRecoilState(driversAtom);
+  const [driverId, setDriverId] = useRecoilState(driverIdAtom);
+  const [match, setMatch] = useState<boolean>(false);
+  const driver = useRecoilValue(driverSelector);
   const shouldRun = drivers ? false : true;
   useFetchData(shouldRun, setDrivers, getAllDrivers, setLoading);
 
-  const driver = drivers?.find(
-    (driver) => driver.id === id && driver.documents
-  );
+  useEffect(() => {
+    if(id) {
+      setDriverId(id);
+    }
+
+  }, [id, setDriverId])
+
+  useEffect(() => {
+    if(drivers) {
+      const isMatch = drivers.find((driver) => driver.id === id);
+      if(!isMatch) router.back();
+      else setMatch(true);
+    } 
+  }, [drivers, id, router])
 
   const image = driver?.documents?.find(doc => doc.type === "IMAGE")?.link;
 
-  if (loading) return <Loading />;
+  if (loading || !match) return <Loading />;
 
   return (
     <>
@@ -82,13 +165,18 @@ export default function DriverWithId() {
       {/* ----------------------- */}
 
       <div className="h-full flex flex-col pt-12 items-center mt-10">
-        <Button
-          onClick={() => {
-            router.push(`/driver/${id}/upload`);
-          }}
-        >
-          Upload Document
-        </Button>
+        <div className="flex">
+          <Button
+            onClick={() => {
+              router.push(`/driver/${id}/upload`);
+            }}
+            className="mr-5"
+          >
+            Upload Document
+          </Button>
+
+          <DeleteDriverById id={id} />
+        </div>
       </div>
     </>
   );
