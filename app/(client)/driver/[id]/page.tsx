@@ -40,7 +40,8 @@ function DeleteDriverById({ id }: { id: number }) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the driver, its documents and trips.
+            This action cannot be undone. This will permanently delete the
+            driver, its documents and trips.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -51,23 +52,23 @@ function DeleteDriverById({ id }: { id: number }) {
                 const response = await deleteDriver(id);
                 if (response.success) {
                   toast({
-                    title: "Driver deleted",
+                    title: "Driver deleted successfully",
                   });
-
-                  setDrivers((prevDrivers) => prevDrivers!.filter(driver => driver.id !== id));
-
-                  router.push("/driver");
+                  setDrivers((prevDrivers) =>
+                    prevDrivers!.filter((driver) => driver.id !== id)
+                  );
+                  router.replace("/driver");
                 } else {
                   toast({
                     title: response.message,
                   });
-                  router.push("/driver");
+                  router.replace("/driver");
                 }
               } catch (error) {
                 toast({
                   title: "Server error",
                 });
-                router.push("/driver");
+                router.replace("/driver");
               }
             }}
           >
@@ -93,27 +94,28 @@ export default function DriverWithId() {
   useFetchData(shouldRun, setDrivers, getAllDrivers, setLoading);
 
   useEffect(() => {
-    if(id) {
+    if (id) {
       setDriverId(id);
     }
-
-  }, [id, setDriverId])
+  }, [id, setDriverId]);
 
   useEffect(() => {
-    if(drivers) {
+    if (drivers) {
       const isMatch = drivers.find((driver) => driver.id === id);
-      if(!isMatch) router.back();
+      if (!isMatch) router.back();
       else setMatch(true);
-    } 
-  }, [drivers, id, router])
+    }
+  }, [drivers, id, router]);
 
-  const image = driver?.documents?.find(doc => doc.type === "IMAGE")?.link;
+  const image = driver?.documents?.find((doc) => doc.type === "IMAGE")?.link;
 
   if (loading || !match) return <Loading />;
 
   return (
     <>
-      <p className="text-center sm:text-4xl text-xl font-semibold mt-10 mx-20">Details</p>
+      <p className="text-center sm:text-4xl text-xl font-semibold mt-10 mx-20">
+        Details
+      </p>
 
       <hr className="border-t-2 border-gray-300 mx-20 mt-1" />
 
@@ -122,20 +124,28 @@ export default function DriverWithId() {
           <div className="mb-8">
             <p className="sm:text-2xl text-xl font-semibold mb-2">Name</p>
             <hr className="border-t-2 border-gray-300" />
-            <p className="mt-2 text-lg text-gray-400 hover:underline">{driver?.name}</p>
+            <p className="mt-2 text-lg text-gray-400 hover:underline">
+              {driver?.name}
+            </p>
           </div>
 
           <div>
-            <p className="sm:text-2xl text-xl font-semibold mb-2">Contact No.</p>
+            <p className="sm:text-2xl text-xl font-semibold mb-2">
+              Contact No.
+            </p>
             <hr className="border-t-2 border-gray-300" />
-            <p className="mt-2 text-lg text-gray-400 hover:underline">{driver?.contact}</p>
+            <p className="mt-2 text-lg text-gray-400 hover:underline">
+              {driver?.contact}
+            </p>
           </div>
         </div>
 
         <div className="w-full md:w-1/2 flex justify-center items-center p-4 md:p-10">
           {image ? (
             <div
-              onClick={() => { router.push(image) }}
+              onClick={() => {
+                router.push(image);
+              }}
               className="cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:shadow-md hover:shadow-white"
             >
               <ImageComponent
@@ -157,7 +167,9 @@ export default function DriverWithId() {
       </div>
 
       <div className="mt-10">
-        <p className="mx-20 sm:text-3xl text-2xl font-semibold mb-2">Documents</p>
+        <p className="mx-20 sm:text-3xl text-2xl font-semibold mb-2">
+          Documents
+        </p>
         <hr className="border-t-2 border-gray-500 mx-20 mt-2 mb-10" />
         {driver?.documents && <DocumentList documents={driver.documents} />}
       </div>

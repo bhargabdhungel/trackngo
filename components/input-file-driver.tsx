@@ -7,7 +7,7 @@ import { Input } from "./ui/input";
 import { Selector } from "./selector";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { uploadFile } from "@/app/actions/doc/driver";
+import { uploadDriverDocument } from "@/app/actions/doc/driver";
 import { useRecoilState } from "recoil";
 import { driversAtom } from "@/atoms/driver";
 import useFetchData from "@/hooks/useFetchData";
@@ -71,7 +71,7 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
     try {
       setLoading(true);
       const fileData = await readFileAsDataURL(inputFile);
-      const res = await uploadFile(
+      const res = await uploadDriverDocument(
         fileData,
         driverId,
         type as DriverDocumentType,

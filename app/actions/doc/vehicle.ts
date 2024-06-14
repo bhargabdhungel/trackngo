@@ -11,127 +11,111 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Function to upload Base64 encoded file
-async function uploadFile(
+export async function uploadVehicleDocument(
   base64Data: string,
-  busId: number,
+  vehicleId: number,
   type: BusDocumentType,
   expiryDate: Date
 ) {
   try {
+    // check if the user is logged in and has permission to upload documents
     const user = await authCheck();
-
     const vehicle = await prisma.bus.findUnique({
       where: {
-        id: busId,
+        id: vehicleId,
         userId: user.userId,
       },
     });
-
-    if (!vehicle) {
+    if (!vehicle)
       return {
         success: false,
         message: "Vehicle not found",
       };
-    }
 
-    // Check for existing documents of the same type and delete them
-    const existingDocuments = await prisma.busDocument.findMany({
+    // Check for existing document of the same type and delete it
+    const existingDocument = await prisma.busDocument.findFirst({
       where: {
-        busId,
+        busId: vehicleId,
         type,
       },
     });
-    await Promise.all(
-      existingDocuments.map(async (doc) => {
-        const publicId = doc.link.split("/").pop();
-        await cloudinary.uploader.destroy(publicId!);
-        await prisma.busDocument.delete({
-          where: { id: doc.id },
-        });
-      })
-    );
+    if (existingDocument) {
+      const publicId = existingDocument.link?.split("/").pop();
+      if (publicId) await cloudinary.uploader.destroy(publicId);
+      await prisma.busDocument.delete({
+        where: { id: existingDocument.id },
+      });
+    }
 
+    // create a new document record
     const uploadResult = await cloudinary.uploader.upload(base64Data, {
       resource_type: "image",
     });
-
     const newDocument = await prisma.busDocument.create({
       data: {
-        busId,
+        busId: vehicleId,
         link: uploadResult.secure_url,
         type,
         expiryDate,
       },
     });
-
     return {
       success: true,
-      message: "File uploaded successfully",
+      message: "Document uploaded successfully",
       data: newDocument,
     };
   } catch (error) {
-    console.error("Upload failed:", error);
     return {
       success: false,
-      message: "Error uploading file",
+      message: "Error uploading document",
     };
   }
 }
 
-async function deleteFile(busDocumentId: number) {
+export async function deleteVehicleDocument(id: number) {
   try {
+    // check if the user is logged in
     const user = await authCheck();
 
-    const busDocument = await prisma.busDocument.findUnique({
+    // find the document
+    const document = await prisma.busDocument.findFirst({
       where: {
-        id: busDocumentId,
+        id: id,
       },
     });
-
-    if (!busDocument) {
+    if (!document)
       return {
         success: false,
         message: "Document not found",
       };
-    }
 
-    const bus = await prisma.bus.findUnique({
+    // check if the user is the owner of the vehicle
+    const vehicle = await prisma.bus.findUnique({
       where: {
-        id: busDocument.busId,
+        id: document.busId,
+        userId: user.userId,
       },
     });
-
-    if (!bus || bus.userId !== user.userId) {
+    if (!vehicle) {
       return {
         success: false,
-        message: "Document not found",
+        message: "Invalid operation",
       };
     }
 
-    // Extract the public_id from the Cloudinary URL
-    const publicId = busDocument.link?.split("/").pop();
-    if (!publicId) {
-      return {
-        success: false,
-        message: "Error deleting the document",
-      };
-    }
-    await cloudinary.uploader.destroy(publicId);
-
-    // Delete the document from the database
+    // delete the document from the database
+    const publicId = document.link?.split("/").pop();
+    if (publicId) await cloudinary.uploader.destroy(publicId);
     await prisma.busDocument.delete({
       where: {
-        id: busDocumentId,
+        id,
       },
     });
-
     return {
       success: true,
       message: "Document deleted successfully",
     };
   } catch (error) {
-    console.error("Deletion failed:", error);
     return {
       success: false,
       message: "Error deleting the document",
@@ -139,4 +123,54 @@ async function deleteFile(busDocumentId: number) {
   }
 }
 
-export { uploadFile, deleteFile };
+export async function deleteAllDocsByVehicleId(id: number) {
+  try {
+    // check if the user is logged in
+    const user = await authCheck();
+
+    // check if the user is the owner of the vehicle
+    const vehicle = await prisma.bus.findUnique({
+      where: {
+        id: id,
+        userId: user.userId,
+      },
+    });
+    if (!vehicle) throw new Error("Invalid operation");
+
+    // get all documents for the vehicle
+    const documents = await prisma.busDocument.findMany({
+      where: {
+        busId: id,
+      },
+    });
+
+    // delete all documents
+    await Promise.all(
+      documents.map(async (document) => {
+        try {
+          const publicId = document.link?.split("/").pop();
+          if (!publicId) {
+            return {
+              success: false,
+              message: "Document not found",
+            };
+          }
+
+          // Deleting the file from Cloudinary
+          await cloudinary.uploader.destroy(publicId);
+
+          // Deleting the document record from the database
+          await prisma.busDocument.delete({
+            where: {
+              id: document.id,
+            },
+          });
+        } catch (error) {
+          throw new Error("Error deleting documents");
+        }
+      })
+    );
+  } catch (error) {
+    throw error;
+  }
+}

@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { BusDocumentType } from "@prisma/client";
 import { Selector } from "./selector";
-import { uploadFile } from "@/app/actions/doc/vehicle";
+import { uploadVehicleDocument } from "@/app/actions/doc/vehicle";
 import { useRecoilState } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import useFetchData from "@/hooks/useFetchData";
@@ -86,7 +86,7 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
     try {
       setLoading(true);
       const fileData = await readFileAsDataURL(inputFile);
-      const res = await uploadFile(
+      const res = await uploadVehicleDocument(
         fileData,
         busId,
         type as BusDocumentType,

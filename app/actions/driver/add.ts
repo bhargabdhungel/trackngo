@@ -52,7 +52,7 @@ export default async function addDriver(name: string, contact: string) {
   return {
     success: true,
     message: "Driver added successfully",
-    description: `Driver ${name} has been added to the system`,
+    description: `${name} has been added to the system`,
     data: driver,
   };
 }
