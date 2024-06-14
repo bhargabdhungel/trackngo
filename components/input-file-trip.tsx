@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { Selector } from "./selector";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import { driversAtom } from "@/atoms/driver";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import useFetchData from "@/hooks/useFetchData";
@@ -56,6 +56,24 @@ export default function InputTrip() {
   const [vehicleId, setVehicleId] = useState<string>("");
   const [driverId, setDriverId] = useState<string>("");
   const { loading: authLoading, userData } = useAuthClient();
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    setEndTime(new Date());
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEndTime(new Date(e.target.value));
+  };
+
+  const handleButtonClick = () => {
+    setIsDropdownOpen(false); // Close the dropdown
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   if (loading || authLoading) return <Loading />;
 
