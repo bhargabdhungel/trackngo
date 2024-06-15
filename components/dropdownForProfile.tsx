@@ -6,6 +6,7 @@ import {
   // Mail,
   // MessageSquare,
   Plus,
+  User,
   // PlusCircle,
   // Settings,
   // User,
@@ -47,11 +48,14 @@ export default function DropdownMenuProfile() {
         <DropdownMenuSeparator />
         {/* profile */}
         <DropdownMenuGroup>
-          {/* <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push("/profile")}
+            className="cursor-pointer"
+          >
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span className="text-xl">profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem> */}

@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default async function HomePage(): Promise<JSX.Element> {
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
-  if (user) redirect("/trip");
+  if (user) redirect("/home");
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="flex flex-col items-center">
