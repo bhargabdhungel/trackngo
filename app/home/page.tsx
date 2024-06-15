@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Truck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const stats = [
   { name: 'Total Buses', value: '150' },
@@ -23,7 +24,7 @@ export default function Home() {
       />
       <nav className="bg-transparent absolute inset-0 mt-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center text-black">
             {/* Company Logo on the left */}
             <div className="">
               <Truck size={50} />
@@ -71,7 +72,7 @@ export default function Home() {
 
       {/* Hero section */}
       <div className="flex flex-col items-start justify-center px-4 mt-40 mx-4 sm:mx-8 md:mx-12 lg:mx-20 w-full md:w-3/4 absolute inset-0">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 md:mb-6 animate-slideIn">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 md:mb-6 animate-slideIn text-black">
           Optimize and Streamline Your Fleet Operations with TrackNGo
         </h1>
         <p className="text-base md:text-lg lg:text-xl xl:text-2xl max-w-2xl lg:max-w-3xl animate-slideIn text-gray-900">
@@ -79,6 +80,14 @@ export default function Home() {
           manage driver schedules, and plan trips efficiently. TrackNGo empowers
           fleet managers with real-time insights and seamless operations.
         </p>
+        <Link href="/signup">
+        <Button variant="outline" size="lg" className="my-5">
+      Join Now
+    </Button>
+     </Link>
+
+
+
       </div>
     </div>
    {/* Key Features */}
@@ -139,7 +148,7 @@ export default function Home() {
       {/* Step 1: Sign Up */}
       <div className="col">
         <div className="card h-full overflow-hidden text-white bg-gray-800 rounded-lg shadow-lg">
-          <img
+        <Image
             src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Sign Up"
             className="object-cover w-full h-48 md:h-64 rounded-t-lg"
@@ -154,11 +163,12 @@ export default function Home() {
       {/* Step 2: Add Your Fleet */}
       <div className="col">
         <div className="card h-full overflow-hidden text-white bg-gray-800 rounded-lg shadow-lg">
-          <img
-            src="https://plus.unsplash.com/premium_photo-1661637686969-7fbcea8789ad?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Add Your Fleet"
-            className="object-cover w-full h-48 md:h-64 rounded-t-lg"
+        <Image
+ src="https://plus.unsplash.com/premium_photo-1661637686969-7fbcea8789ad?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+ alt="Add Your Fleet"
+ className="object-cover w-full h-48 md:h-64 rounded-t-lg"
           />
+
           <div className="p-6">
             <h3 className="text-xl font-semibold mb-2">Add Your Fleet</h3>
             <p className="text-gray-300 mb-4">Input your vehicle details and add them to your fleet.</p>
@@ -169,10 +179,10 @@ export default function Home() {
       {/* Step 3: Schedule Trips */}
       <div className="col">
         <div className="card h-full overflow-hidden text-white bg-gray-800 rounded-lg shadow-lg">
-          <img
-            src="https://images.unsplash.com/photo-1707734619119-a3283339147a?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Schedule Trips"
-            className="object-cover w-full h-48 md:h-64 rounded-t-lg"
+          <Image
+                      src="https://images.unsplash.com/photo-1707734619119-a3283339147a?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      alt="Schedule Trips"
+                      className="object-cover w-full h-48 md:h-64 rounded-t-lg"
           />
           <div className="p-6">
             <h3 className="text-xl font-semibold mb-2">Schedule Trips</h3>
@@ -208,7 +218,9 @@ export default function Home() {
             </p>
           </div>
           <div className="flex justify-center">
-            <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
+          <Image
+                src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" 
+              />
           </div>
         </div>
       </div>
@@ -225,7 +237,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center bg-gray-800 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 card animate__animated animate__fadeIn">
             <div className="w-24 h-24 mb-4">
-              <img 
+            <Image
                 src="https://images.unsplash.com/profile-1627836587305-3c8121a86850image?bg=fff&crop=faces&dpr=2&h=150&w=150&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
                 alt="User 1" 
                 className="object-cover rounded-full border-4 border-gray-600" 
@@ -239,10 +251,10 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-center bg-gray-800 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 card animate__animated animate__fadeIn">
             <div className="w-24 h-24 mb-4">
-              <img 
-                src="https://images.unsplash.com/profile-1650823265094-d12ce7a91369image?bg=fff&crop=faces&dpr=2&h=150&w=150&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
-                alt="User 2" 
-                className="object-cover rounded-full border-4 border-gray-600" 
+              <Image
+               src="https://images.unsplash.com/profile-1650823265094-d12ce7a91369image?bg=fff&crop=faces&dpr=2&h=150&w=150&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+               alt="User 2" 
+               className="object-cover rounded-full border-4 border-gray-600" 
               />
             </div>
             <p className="text-gray-300 mb-4">
@@ -253,11 +265,9 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-center bg-gray-800 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 card animate__animated animate__fadeIn">
             <div className="w-24 h-24 mb-4">
-              <img 
-                src="https://images.unsplash.com/profile-fb-1544622642-bd417470b1eb.jpg?bg=fff&crop=faces&dpr=2&h=150&w=150&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
+              <Image  src="https://images.unsplash.com/profile-fb-1544622642-bd417470b1eb.jpg?bg=fff&crop=faces&dpr=2&h=150&w=150&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
                 alt="User 3" 
-                className="object-cover rounded-full border-4 border-gray-600" 
-              />
+                className="object-cover rounded-full border-4 border-gray-600" />
             </div>
             <p className="text-gray-300 mb-4">
               "The platform is user-friendly and the support team is always ready to help."
