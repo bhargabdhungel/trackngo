@@ -14,6 +14,15 @@ import useFetchData from "@/hooks/useFetchData";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import { readFileAsDataURL } from "./input-file-bus";
 import { Driver } from "@/lib/types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 
 const driverDocOptions = Object.keys(DriverDocumentType).map((key) => ({
   value: key,
@@ -112,19 +121,44 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
   };
 
   return (
-    <div className="flex flex-col items-center w-5/6 gap-8">
-      <Input type="file" accept="image/*" onChange={handleFileChange} />
-      <Selector
-        placeholder="Select a document"
-        label="Documents"
-        setSelected={setType}
-        options={driverDocOptions}
-      />
-      <Input
-        type="date"
-        onChange={(e) => setExpiryDate(new Date(e.target.value))}
-      />
-      <Button onClick={handleUpload}>Upload</Button>
-    </div>
+    <>
+      <Card className="w-[350px] my-5">
+        <CardHeader>
+          <CardTitle>Upload a Document</CardTitle>
+          <CardDescription>Upload your docs in one-click.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="framework">Select A Date</Label>
+                <Input
+                  type="date"
+                  onChange={(e) => setExpiryDate(new Date(e.target.value))}
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name">Choose an image</Label>
+                <Input type="file" accept="image/*" onChange={handleFileChange} />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name">Document Type</Label>
+                <Selector
+                  placeholder="Select a document"
+                  label="Documents"
+                  setSelected={setType}
+                  options={driverDocOptions}
+                />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button onClick={handleUpload}>Upload</Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }

@@ -13,6 +13,16 @@ import useFetchData from "@/hooks/useFetchData";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import { Vehicle } from "@/lib/types";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+
 export function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -135,21 +145,44 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
   if (loading || !vehicles) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col gap-8 w-5/6 items-center">
-      <Input type="file" accept="image/*" onChange={handleFileChange} />
-      <Selector
-        placeholder="Select a document"
-        label="Documents"
-        setSelected={setType}
-        options={fruitOptions}
-      />
-      <Input
-        type="date"
-        onChange={(e) => setExpiryDate(new Date(e.target.value))}
-      />
-      <Button className="mt-12" onClick={handleUpload}>
-        Upload
-      </Button>
-    </div>
+    <>
+      <Card className="w-[350px] my-5">
+        <CardHeader>
+          <CardTitle>Upload a Document</CardTitle>
+          <CardDescription>Upload your docs in one-click.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="framework">Select A Date</Label>
+                <Input
+                  type="date"
+                  onChange={(e) => setExpiryDate(new Date(e.target.value))}
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name">Choose an image</Label>
+                <Input type="file" accept="image/*" onChange={handleFileChange} />
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name">Document Type</Label>
+                <Selector
+                  placeholder="Select a document"
+                  label="Documents"
+                  setSelected={setType}
+                  options={fruitOptions}
+                />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button onClick={handleUpload}>Upload</Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }
