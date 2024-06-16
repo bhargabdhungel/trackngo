@@ -6,29 +6,51 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import updateUsername from "@/app/actions/user/updateUsername";
+import getUserFromDB from "@/app/actions/user/getUser";
+import useFetchData from "@/hooks/useFetchData";
+
+interface UserData {
+    userId: number;
+    name: string;
+    email: string;
+    image: string | null;
+    paid: boolean;
+    role: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 
 export default function Profile() {
     const { userData } = useAuthClient();
-    console.log(userData);
-    const [username, setUsername] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [shouldRun, setShouldRun] = useState<boolean>(false);
+    const [user, setUser] = useState<UserData | null>(null);
+    const [username, setUsername] = useState<string>('');
+    const id = userData?.userId!;
 
-    useEffect(() => {
+    useFetchData(shouldRun, setUser, getUserFromDB, setLoading, { id });
+
+    async function handleUpdate() {
         if (userData) {
-            setUsername(userData.name!);
-        }
-    }, [userData]);
-
-    async function handleUpdate () {
-        if(userData) {
-            const response = await updateUsername(userData.userId!, username);
-            console.log(response);
+            await updateUsername(userData.userId!, username);
+            setShouldRun(true);
         }
     }
 
+    useEffect(() => {
+        if(!user) {
+            setShouldRun(true);
+        } else {
+            setShouldRun(false);
+            setUsername(user.name);
+        }
+    }, [setShouldRun, user])
+
     return (
         <>
-            <div className="w-full px-5">
-                <div className="bg-white sm:h-40 h-32 mt-2 rounded-md"></div>
+            <div className="w-full px-20">
+                <div className="sm:h-40 h-32 mt-2 rounded-md bg-foreground"></div>
             </div>
 
             <div className="justify-center flex">
