@@ -8,18 +8,7 @@ import { Button } from "@/components/ui/button";
 import updateUsername from "@/app/actions/user/updateUsername";
 import getUserFromDB from "@/app/actions/user/getUser";
 import useFetchData from "@/hooks/useFetchData";
-
-interface UserData {
-    userId: number;
-    name: string;
-    email: string;
-    image: string | null;
-    paid: boolean;
-    role: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
+import { UserData } from "@/lib/types";
 
 export default function Profile() {
     const { userData } = useAuthClient();
@@ -39,7 +28,7 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        if(!user) {
+        if (!user) {
             setShouldRun(true);
         } else {
             setShouldRun(false);
@@ -49,7 +38,7 @@ export default function Profile() {
 
     return (
         <>
-            <div className="w-full px-20">
+            <div className="w-full px-2">
                 <div className="sm:h-40 h-32 mt-2 rounded-md bg-foreground"></div>
             </div>
 
@@ -71,9 +60,13 @@ export default function Profile() {
                         value={userData?.email}
                         className="sm:text-md text-sm font-semibold sm:w-2/3 w-4/5 text-center mt-5 border-none"
                     />
-                    <Button className="mt-5" onClick={handleUpdate}>
-                        Update
-                    </Button>
+                    {
+                        ((username !== user?.name)) && (
+                            <Button className="mt-5" onClick={handleUpdate}>
+                                Update
+                            </Button>
+                        )
+                    }
                 </div>
             </div>
         </>
