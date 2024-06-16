@@ -10,7 +10,7 @@ import KeyFeatures from "@/components/KeyFeatures";
 import DashBoardPreview from "@/components/DashBoardPreview";
 import HowItWorks from "@/components/HowItWorks";
 import AboutUs from "@/components/AboutUs";
-import Testimonials from "@/components/testimonials";
+import Testimonials from "@/components/Testimonials";
 import Stats from "@/components/stats";
 import CustomFooter from "@/components/Footer";
 
