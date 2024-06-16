@@ -90,3 +90,14 @@ export interface Document {
   link: string;
   expiryDate?: Date;
 }
+
+export interface UserData {
+  userId: number;
+  name: string;
+  email: string;
+  image: string | null;
+  paid: boolean;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
