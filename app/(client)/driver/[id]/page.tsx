@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useFetchData from "@/hooks/useFetchData";
-import Loading from "@/components/loading";
+import Loading from "@/app/loading";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { driverIdAtom, driverSelector, driversAtom } from "@/atoms/driver";
 import { Button } from "@/components/ui/button";

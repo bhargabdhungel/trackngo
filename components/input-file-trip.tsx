@@ -9,7 +9,7 @@ import { Input } from "./ui/input";
 import useFetchData from "@/hooks/useFetchData";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import getAllDrivers from "@/app/actions/driver/getAll";
-import Loading from "./loading";
+import Loading from "@/app/loading";
 import { Trip } from "@/lib/types";
 import addTrip from "@/app/actions/trip/add";
 import { toast } from "./ui/use-toast";

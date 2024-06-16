@@ -20,7 +20,7 @@ import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
-import Loading from "./loading";
+import Loading from "@/app/loading";
 import useFetchData from "@/hooks/useFetchData";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 

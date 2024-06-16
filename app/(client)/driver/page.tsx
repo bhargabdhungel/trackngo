@@ -14,7 +14,7 @@ import { driversAtom } from "@/atoms/driver";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import useFetchData from "@/hooks/useFetchData";
 import { Button } from "@/components/ui/button";
-import Loading from "@/components/loading";
+import Loading from "@/app/loading";
 
 export default function DriversPage() {
   const [loading, setLoading] = useState(false);

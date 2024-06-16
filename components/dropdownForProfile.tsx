@@ -28,7 +28,7 @@ import ModeToggle from "./toggle-theme";
 // import Logout from "./dropdown/logout";
 import { useRouter } from "next/navigation";
 import useAuthClient from "@/hooks/useAuthClient";
-import Loading from "./loading";
+import Loading from "@/app/loading";
 
 export default function DropdownMenuProfile() {
   const { loading, userData } = useAuthClient();

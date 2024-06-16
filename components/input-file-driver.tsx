@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
 import { DriverDocumentType } from "@prisma/client";
-import Loading from "./loading";
+import Loading from "@/app/loading";
 import { Input } from "./ui/input";
 import { Selector } from "./selector";
 import { Button } from "./ui/button";
@@ -21,8 +21,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 const driverDocOptions = Object.keys(DriverDocumentType).map((key) => ({
   value: key,
@@ -140,7 +140,11 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
 
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Choose an image</Label>
-                <Input type="file" accept="image/*" onChange={handleFileChange} />
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
               </div>
 
               <div className="flex flex-col space-y-1.5">

@@ -1,7 +1,5 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-const defaultTheme = require("tailwindcss/defaultTheme");
-const colors = require("tailwindcss/colors");
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
@@ -25,6 +23,14 @@ const config = {
     },
     extend: {
       keyframes: {
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
         fadeIn: {
           "0%": { opacity: "0" }, // "0%": "opacity: 0;
           "100%": { opacity: "1" }, // "100%": "opacity: 1;"
@@ -59,6 +65,7 @@ const config = {
         },
       },
       animation: {
+        aurora: "aurora 60s linear infinite",
         fadeIn: "fadeIn 2s ease-in-out",
         fadeOut: "fadeOut 2s ease-in-out",
         moveUp: "moveUp 2s ease-in-out",
@@ -126,4 +133,5 @@ function addVariablesForColors({ addBase, theme }: any) {
     ":root": newVars,
   });
 }
+
 export default config;

@@ -7,7 +7,7 @@ import getAllTrips from "@/app/actions/trip/getAll";
 import { useRecoilState } from "recoil";
 import { tripsAtom } from "@/atoms/trip";
 import useFetchData from "@/hooks/useFetchData";
-import Loading from "@/components/loading";
+import Loading from "@/app/loading";
 import { Trip } from "@/lib/types";
 import updateTrips from "@/lib/updateTrips";
 

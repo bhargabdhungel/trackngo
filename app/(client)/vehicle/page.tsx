@@ -12,7 +12,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import { useState } from "react";
-import Loading from "@/components/loading";
+import Loading from "@/app/loading";
 import useFetchData from "@/hooks/useFetchData";
 import { Button } from "@/components/ui/button";
 

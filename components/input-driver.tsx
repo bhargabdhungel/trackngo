@@ -19,7 +19,7 @@ import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { driversAtom } from "@/atoms/driver";
-import Loading from "./loading";
+import Loading from "@/app/loading";
 import useFetchData from "@/hooks/useFetchData";
 import getAllDrivers from "@/app/actions/driver/getAll";
 

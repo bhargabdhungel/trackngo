@@ -28,14 +28,14 @@ function useFetchData<T, Args extends any[]>(
         } else {
           toast({
             title: "Error",
-            description: result.message || "An unexpected error occurred",
+            description: result.message,
           });
         }
       } catch (e) {
         console.error(e);
         toast({
           title: "Error",
-          description: "Failed to fetch data",
+          description: "You are not authorized to access this page",
         });
       }
       setLoading(false);

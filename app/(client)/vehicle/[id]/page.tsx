@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Vehicle } from "@/lib/types";
 
 import useFetchData from "@/hooks/useFetchData";
-import Loading from "@/components/loading";
+import Loading from "@/app/loading";
 import { useRecoilState } from "recoil";
 import { vehiclesAtom } from "@/atoms/vehicle";
 import { Button } from "@/components/ui/button";
@@ -31,16 +31,22 @@ export default function VehicleWithId() {
 
   return (
     <>
-      <p className="text-center sm:text-4xl text-xl font-semibold mt-10 mx-20">Details</p>
+      <p className="text-center sm:text-4xl text-xl font-semibold mt-10 mx-20">
+        Details
+      </p>
 
       <hr className="border-t-2 border-gray-300 mx-20 mt-1" />
 
       <p className="sm:text-3xl text-2xl font-semibold mt-10 mx-20">Name</p>
-      <hr className="border-t-2 border-gray-300 mx-20 mt-1 sm:w-1/2" />      
-      <p className="sm:text-2xl text-lg font-semibold mt-1 mx-20 text-gray-400 hover:underline">{vehicle?.name}</p>
+      <hr className="border-t-2 border-gray-300 mx-20 mt-1 sm:w-1/2" />
+      <p className="sm:text-2xl text-lg font-semibold mt-1 mx-20 text-gray-400 hover:underline">
+        {vehicle?.name}
+      </p>
 
       <div className="mt-10">
-        <p className="mx-20 sm:text-3xl text-2xl font-semibold mb-2">Documents</p>
+        <p className="mx-20 sm:text-3xl text-2xl font-semibold mb-2">
+          Documents
+        </p>
         <hr className="border-t-2 border-gray-500 mx-20 mt-2 mb-10" />
         {vehicle?.documents && <DocumentList documents={vehicle.documents} />}
       </div>
