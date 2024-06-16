@@ -4,7 +4,10 @@ import {
   Settings,
   Bookmark,
   SquarePen,
-  LayoutGrid
+  LayoutGrid,
+  Truck,
+  User2,
+  Download,
 } from "lucide-react";
 
 type Submenu = {
@@ -36,65 +39,94 @@ export function getMenuList(pathname: string): Group[] {
           label: "Dashboard",
           active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
-          submenus: []
-        }
-      ]
+          submenus: [],
+        },
+      ],
     },
     {
       groupLabel: "Contents",
       menus: [
         {
           href: "",
-          label: "Posts",
-          active: pathname.includes("/posts"),
+          label: "Trips",
+          active: pathname.includes("/trips"),
           icon: SquarePen,
           submenus: [
             {
-              href: "/posts",
-              label: "All Posts",
-              active: pathname === "/posts"
+              href: "/trips",
+              label: "All Trips",
+              active: pathname === "/trips",
             },
             {
-              href: "/posts/new",
-              label: "New Post",
-              active: pathname === "/posts/new"
-            }
-          ]
+              href: "/trips/new",
+              label: "New Trip",
+              active: pathname === "/trips/new",
+            },
+          ],
         },
         {
-          href: "/categories",
-          label: "Categories",
-          active: pathname.includes("/categories"),
-          icon: Bookmark,
-          submenus: []
+          href: "/vehicles",
+          label: "Vehicles",
+          active: pathname.includes("/vehicles"),
+          icon: Truck,
+          submenus: [
+            {
+              href: "/vehicles",
+              label: "All Vehicles",
+              active: pathname === "/vehicles",
+            },
+            {
+              href: "/vehicles/new",
+              label: "New Vehicle",
+              active: pathname === "/vehicles/new",
+            },
+          ],
         },
         {
-          href: "/tags",
-          label: "Tags",
-          active: pathname.includes("/tags"),
-          icon: Tag,
-          submenus: []
-        }
-      ]
+          href: "/drivers",
+          label: "Drivers",
+          active: pathname.includes("/drivers"),
+          icon: Users,
+          submenus: [
+            {
+              href: "/drivers",
+              label: "All Drivers",
+              active: pathname === "/drivers",
+            },
+            {
+              href: "/drivers/new",
+              label: "New Driver",
+              active: pathname === "/drivers/new",
+            },
+          ],
+        },
+      ],
     },
     {
       groupLabel: "Settings",
       menus: [
-        {
-          href: "/users",
-          label: "Users",
-          active: pathname.includes("/users"),
-          icon: Users,
-          submenus: []
-        },
+        // {
+        //   href: "/users",
+        //   label: "Users",
+        //   active: pathname.includes("/users"),
+        //   icon: Users,
+        //   submenus: [],
+        // },
         {
           href: "/account",
           label: "Account",
           active: pathname.includes("/account"),
           icon: Settings,
-          submenus: []
-        }
-      ]
-    }
+          submenus: [],
+        },
+        {
+          href: "/download",
+          label: "Download",
+          active: pathname.includes("/download"),
+          icon: Download,
+          submenus: [],
+        },
+      ],
+    },
   ];
 }

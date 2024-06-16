@@ -16,7 +16,7 @@ import useFetchData from "@/hooks/useFetchData";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/loading";
 
-export default function Commands() {
+export default function DriversPage() {
   const [loading, setLoading] = useState(false);
   const [drivers, setDrivers] = useRecoilState(driversAtom);
   const shouldRun = drivers ? false : true;

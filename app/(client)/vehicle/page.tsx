@@ -16,7 +16,7 @@ import Loading from "@/components/loading";
 import useFetchData from "@/hooks/useFetchData";
 import { Button } from "@/components/ui/button";
 
-export default function Commands() {
+export default function VehilesPage() {
   const [loading, setLoading] = useState(false);
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
   const shouldRun = vehicles ? false : true;

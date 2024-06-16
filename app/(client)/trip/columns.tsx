@@ -1,6 +1,6 @@
 "use client";
 
-import { FormattedTrip, Trip } from "@/lib/types";
+import { Trip } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,8 @@ function DeleteTrip({ id }: { id: number }) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={async () => {
+            onClick={async (e) => {
+              e.stopPropagation();
               try {
                 const response = await deleteTrip(id);
                 if (response.success) {
@@ -137,12 +138,6 @@ export const columns: ColumnDef<Trip>[] = [
             </DropdownMenuItem> */}
             <DropdownMenuItem>
               <DeleteTrip id={row.original.id!} />
-            </DropdownMenuItem>
-
-            <DropdownMenuItem>
-              <Link href={`/trip/${row.original.id}`} className="w-full">
-                Trip details
-              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link
