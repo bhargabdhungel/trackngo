@@ -22,6 +22,14 @@ import { driversAtom } from "@/atoms/driver";
 import Loading from "@/app/loading";
 import useFetchData from "@/hooks/useFetchData";
 import getAllDrivers from "@/app/actions/driver/getAll";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -43,6 +51,7 @@ export default function InputDriver() {
     defaultValues: {
       name: "",
       // contact: 1,
+      contact: ""
     },
   });
 
@@ -76,38 +85,46 @@ export default function InputDriver() {
   if (loading) return <Loading />;
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Name of the driver" {...field} />
-              </FormControl>
-              <FormDescription>Enter the name of the driver</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="contact"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contact</FormLabel>
-              <FormControl>
-                <Input placeholder="Contact number" type="number" {...field} />
-              </FormControl>
-              <FormDescription>Enter the contact number</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle>Add a Driver</CardTitle>
+        <CardDescription>Add a new driver to the system.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name of the driver" {...field} />
+                  </FormControl>
+                  <FormDescription>Enter the name of the driver</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="contact"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contact</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contact number" type="number" {...field} />
+                  </FormControl>
+                  <FormDescription>Enter the contact number</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
