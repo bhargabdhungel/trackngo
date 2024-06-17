@@ -23,6 +23,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "./DateInput/DatePicker";
 
 const driverDocOptions = Object.keys(DriverDocumentType).map((key) => ({
   value: key,
@@ -34,7 +35,7 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
   const router = useRouter();
-  const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
+  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
   const [drivers, setDrivers] = useRecoilState(driversAtom);
   const shouldRun = drivers ? false : true;
 
@@ -116,7 +117,7 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
       console.error("Error uploading document:", error);
     } finally {
       setLoading(false);
-      router.push(`/driver/${driverId}`);
+      router.replace(`/drivers/${driverId}`);
     }
   };
 
@@ -131,24 +132,23 @@ export default function InputDriverDoc({ driverId }: { driverId: number }) {
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Select A Date</Label>
-                <Input
-                  type="date"
-                  onChange={(e) => setExpiryDate(new Date(e.target.value))}
+                <DatePicker
+                  date={expiryDate}
+                  setDate={setExpiryDate}
+                  placeholder="Select expiry date"
                 />
               </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Choose an image</Label>
+              <div className="flex flex-col space-y-1.5 text-sm text-muted-foreground">
                 <Input
                   type="file"
                   accept="image/*"
+                  placeholder="Choose an image"
                   onChange={handleFileChange}
                 />
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Document Type</Label>
                 <Selector
                   placeholder="Select a document"
                   label="Documents"

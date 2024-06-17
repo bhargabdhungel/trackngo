@@ -17,7 +17,10 @@ export default function GetTrips() {
   const [shouldRun, setShouldRun] = useState<boolean>(false);
   const [updatedTrips, setUpdatedTrips] = useState<Trip[]>([]);
 
-  useFetchData(shouldRun, setTrips, getAllTrips, setLoading, {});
+  useFetchData(shouldRun, setTrips, getAllTrips, setLoading, {
+    startDate: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 30),
+    endDate: new Date(),
+  });
 
   useEffect(() => {
     if (trips) {

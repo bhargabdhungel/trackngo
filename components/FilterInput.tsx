@@ -35,14 +35,14 @@ import getAllTrips from "@/app/actions/trip/getAll";
 
 export default function FilterInput() {
   const date: Date = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
-  const [localStartDate, setLocalStartDate] = useState<Date>(date);
-  const [localEndDate, setLocalEndDate] = useState(new Date());
+  const [localStartDate, setLocalStartDate] = useState<Date | null>(date);
+  const [localEndDate, setLocalEndDate] = useState<Date | null>(new Date());
   const [localVehicleId, setLocalVehicleId] = useState<string | null>(null);
   const [localDriverId, setLocalDriverId] = useState<string | null>(null);
   const [vehicleId, setVehicleId] = useRecoilState(vehicleIdAtom);
   const [driverId, setDriverId] = useRecoilState(driverIdAtom);
-  const [startDate, setStartDate] = useState(localStartDate);
-  const [endDate, setEndDate] = useState(localEndDate);
+  const [startDate, setStartDate] = useState(localStartDate ?? date);
+  const [endDate, setEndDate] = useState(localEndDate ?? new Date());
 
   const [loadingVehicles, setLoadingVehicles] = useState<boolean>(false);
   const [loadingDrivers, setLoadingDrivers] = useState<boolean>(false);

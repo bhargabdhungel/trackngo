@@ -24,8 +24,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "./DateInput/DatePicker";
+// import { DatePicker } from "./datepicker";
 
 export default function InputTrip() {
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
@@ -55,8 +57,8 @@ export default function InputTrip() {
 
   const [startLocation, setStartLocation] = useState<string>("");
   const [endLocation, setEndLocation] = useState<string>("");
-  const [startTime, setStartTime] = useState<Date>(new Date());
-  const [endTime, setEndTime] = useState<Date>(new Date());
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [endTime, setEndTime] = useState<Date | null>(null);
   const [fare, setFare] = useState<string>("");
   const [maintenance, setMaintenance] = useState<string>("");
   const [fuel, setFuel] = useState<string>("");
@@ -66,15 +68,10 @@ export default function InputTrip() {
   const [driverId, setDriverId] = useState<string>("");
   const { loading: authLoading, userData } = useAuthClient();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    setEndTime(new Date());
-  }, []);
-
   if (loading || authLoading) return <Loading />;
 
   return (
+    <div className="w-full h-[calc(100vh-112px)] flex justify-center items-center">
       <Card className="w-[350px] sm:w-[700px] lg:w-[800px] my-2">
         <CardHeader>
           <CardTitle>Add a Trip</CardTitle>
@@ -84,7 +81,6 @@ export default function InputTrip() {
           <form>
             <div className="grid w-full items-center gap-4 sm:grid-cols-2">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="StartLocation">Start Location</Label>
                 <Input
                   type="text"
                   placeholder="Start Location"
@@ -93,7 +89,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="EndLocation">End Location</Label>
                 <Input
                   type="text"
                   placeholder="End Location"
@@ -102,25 +97,39 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="Starttime">Start Time</Label>
-                <Input
+                {/* <DatePicker
+                setDate={(date) => {
+                  setStartTime(date!);
+                }}
+                date={startTime}
+              /> */}
+                <DatePicker
+                  date={startTime}
+                  setDate={(date) => setStartTime(date)}
+                  placeholder="Start Date"
+                />
+                {/* <Input
                   type="datetime-local"
                   placeholder="Start Date and Time"
                   onChange={(e) => setStartTime(new Date(e.target.value))}
-                />
+                /> */}
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="End Date and Time">End Time</Label>
-                <Input
-                  type="datetime-local"
-                  placeholder="End Date and Time"
-                  onChange={(e) => setEndTime(new Date(e.target.value))}
+                <DatePicker
+                  date={endTime}
+                  setDate={(date) => setEndTime(date)}
+                  placeholder="End Date"
                 />
+                {/* <Label htmlFor="End Date and Time">End Time</Label>
+              <Input
+                type="datetime-local"
+                placeholder="End Date and Time"
+                onChange={(e) => setEndTime(new Date(e.target.value))}
+              /> */}
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="Fare">Fare</Label>
                 <Input
                   type="number"
                   placeholder="Fare"
@@ -129,7 +138,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="Maintenance">Maintenance</Label>
                 <Input
                   type="number"
                   placeholder="Maintenance"
@@ -138,7 +146,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="Fuel">Fuel</Label>
                 <Input
                   type="number"
                   placeholder="Fuel"
@@ -147,7 +154,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="OtherExpenses">Other Expenses</Label>
                 <Input
                   type="number"
                   placeholder="Other Expenses"
@@ -156,7 +162,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="VehicleSelect">Select a Vehicle</Label>
                 <Selector
                   placeholder="Select a vehicle"
                   label="Vehicles"
@@ -166,7 +171,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="DriverSelect">Select Driver</Label>
                 <Selector
                   placeholder="Select a driver"
                   label="Drivers"
@@ -176,7 +180,6 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="Description">Description</Label>
                 <Input
                   type="text"
                   placeholder="Description"
@@ -191,8 +194,8 @@ export default function InputTrip() {
             onClick={async () => {
               const trip: Trip = {
                 userId: userData.userId as number,
-                startTime,
-                endTime,
+                startTime: startTime ? startTime : new Date(),
+                endTime: endTime ? endTime : new Date(),
                 routeFrom: startLocation,
                 routeTo: endLocation,
                 fare: parseInt(fare),
@@ -221,7 +224,7 @@ export default function InputTrip() {
                   description: JSON.stringify(error),
                 });
               } finally {
-                router.replace("/trip");
+                router.replace("/trips");
                 setLoading(false);
               }
             }}
@@ -230,5 +233,6 @@ export default function InputTrip() {
           </Button>
         </CardFooter>
       </Card>
+    </div>
   );
 }

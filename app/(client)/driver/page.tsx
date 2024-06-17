@@ -33,7 +33,7 @@ export default function DriversPage() {
           <CommandGroup heading="drivers">
             {drivers &&
               drivers.map((driver) => (
-                <Link key={driver.id} href={`/driver/${driver.id}`}>
+                <Link key={driver.id} href={`/drivers/${driver.id}`}>
                   <CommandItem className="p-2 text-xl cursor-pointer">
                     <span>{driver.name}</span>
                   </CommandItem>
@@ -43,7 +43,7 @@ export default function DriversPage() {
         </CommandList>
       </Command>
 
-      <Link href="/driver/addnew">
+      <Link href="/drivers/new">
         <Button>Add New Driver</Button>
       </Link>
     </div>

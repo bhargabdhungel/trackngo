@@ -27,8 +27,8 @@ const FormSchema = z.object({
   name: z.string().min(2, {
     message: "Driver name is too short",
   }),
-  contact: z.string().min(5, {
-    message: "Contact is too short",
+  contact: z.string().refine((value) => value.toString().length === 10, {
+    message: "Contact number must be exactly 10 digits",
   }),
 });
 
@@ -42,7 +42,7 @@ export default function InputDriver() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
-      contact: "",
+      // contact: 1,
     },
   });
 
@@ -56,7 +56,7 @@ export default function InputDriver() {
           return [...currentDrivers, response.data!];
         });
         form.reset();
-        router.replace("/driver");
+        router.replace("/drivers");
       }
       toast({
         title: response.message,
@@ -99,7 +99,7 @@ export default function InputDriver() {
             <FormItem>
               <FormLabel>Contact</FormLabel>
               <FormControl>
-                <Input placeholder="Contact number" {...field} />
+                <Input placeholder="Contact number" type="number" {...field} />
               </FormControl>
               <FormDescription>Enter the contact number</FormDescription>
               <FormMessage />

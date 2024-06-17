@@ -53,7 +53,7 @@ export default function InputBus() {
           return [...currentVehicles, response.data!];
         });
         form.reset();
-        router.replace("/vehicle");
+        router.replace("/vehicles");
       }
       toast({
         title: response.message,
@@ -82,9 +82,9 @@ export default function InputBus() {
             <FormItem>
               <FormLabel>Vehicle</FormLabel>
               <FormControl>
-                <Input placeholder="name of the vehicle" {...field} />
+                <Input placeholder="vehicle number" {...field} />
               </FormControl>
-              <FormDescription>Vehicle name should be unique</FormDescription>
+              <FormDescription>Vehicle number should be unique</FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -1,47 +1,23 @@
+import { title } from "process";
 import { HoverEffect } from "./ui/card-hover-effect";
 
-// Real-Time Tracking
-// Monitor trucks and drivers in real-time. Get instant updates on their location, speed, and status, ensuring that you always know where your assets are.
+// Trip Scheduler
+// Easily add trips according to your preferred timings, giving you flexibility and convenience in planning your travels.
 
-// Live GPS tracking
-// Speed monitoring
-// Status updates
-// Geo-fencing alerts
-// Trip Scheduling
-// Easily plan and manage trips. Schedule routes, assign drivers, and optimize your fleet's efficiency with our intuitive scheduling tools.
+// Travel Options
+// Enables the inclusion of any vehicle for travel, offering flexibility and a wider range of transportation choices.
 
-// Route planning
-// Driver assignment
-// Trip optimization
-// Automated notifications
-// Driver Management
-// Keep track of driver details and performance. Maintain comprehensive records and ensure compliance with our driver management features.
-
-// Driver profiles
-// Performance metrics
-// Compliance tracking
-// Incident reporting
 // Document Management
-// Securely store and manage all essential bus-related documents. Ensure easy access and compliance with our comprehensive document management system.
+// Facilitates online storage for vehicle and driver documents, ensuring easy access and organization of important records.
 
-// Document storage and retrieval
-// Compliance checks
-// Expiry notifications
-// Secure access controls
-// Reporting
-// Gain insights into your fleet's operations with our advanced reporting tools. Create detailed reports on bus usage, driver performance, and maintenance to make informed decisions.
+// Document Vault
+// Securely upload and manage essential documents like licenses, insurance, and vehicle registrations, and many more for easy retrieval and organization.
 
-// Customizable report generation
-// Performance analytics
-// Maintenance tracking
-// Export options for data analysis
-// Real-time Updates
-// Stay informed with real-time updates on bus locations and statuses. Ensure operational efficiency with live tracking and instant alerts.
+// Trip Sheet
+// Allows users to download a sheet containing all added trips, facilitating easy access and organization of trip details.
 
-// Live bus tracking
-// Status notifications
-// Operational alerts
-// Geo-fencing capabilities
+// Trip Organizer
+// Empowers users to filter trips based on driver, timings, and vehicle details, optimizing planning and organization efficiency.
 
 export default function HomeFeatures() {
   return (
@@ -55,51 +31,39 @@ export default function HomeFeatures() {
 }
 export const projects = [
   {
-    title: "Real-Time Tracking",
+    title: "Trip Scheduler",
     description:
-      "Monitor truck and drivers in real-time. Get instant updates on their location, speed, and status, ensuring that you always know where your assets are.",
-    link: "https://www.google.com",
+      "Easily add trips according to your preferred timings, giving you flexibility and convenience in planning your travels.",
+    link: "/trips/new",
   },
   {
-    title: "Live GPS tracking",
-    description: "Speed monitoring",
-    link: "https://www.google.com",
-  },
-  {
-    title: "Status updates",
-    description: "Geo-fencing alerts",
-    link: "https://www.google.com",
-  },
-  {
-    title: "Trip Scheduling",
+    title: "Travel Options",
     description:
-      "Easily plan and manage trips. Schedule routes, assign drivers, and optimize your fleet's efficiency with our intuitive scheduling tools.",
-    link: "https://www.google.com",
+      "Enables the inclusion of any vehicle for travel, offering flexibility and a wider range of transportation choices.",
+    link: "/vehicles/new",
   },
   {
-    title: "Route planning",
-    description: "Driver assignment",
-    link: "https://www.google.com",
-  },
-  {
-    title: "Trip optimization",
-    description: "Automated notifications",
-    link: "https://www.google.com",
-  },
-  {
-    title: "Driver Management",
+    title: "Document Management",
     description:
-      "Keep track of driver details and performance. Maintain comprehensive records and ensure compliance with our driver management features.",
-    link: "https://www.google.com",
+      "Facilitates online storage for vehicle and driver documents, ensuring easy access and organization of important records.",
+    link: "/dashboard",
   },
   {
-    title: "Driver profiles",
-    description: "Performance metrics",
-    link: "https://www.google.com",
+    title: "Document Vault",
+    description:
+      "Securely upload and manage essential documents like licenses, insurance, and vehicle registrations, and many more for easy retrieval and organization.",
+    link: "/dashboard",
   },
   {
-    title: "Compliance tracking",
-    description: "Compliance tracking",
-    link: "https://www.google.com",
+    title: "Trip Sheet",
+    description:
+      "Allows users to download a sheet containing all added trips, facilitating easy access and organization of trip details.",
+    link: "/trips/new",
+  },
+  {
+    title: "Trip Organizer",
+    description:
+      "Empowers users to filter trips based on driver, timings, and vehicle details, optimizing planning and organization efficiency.",
+    link: "/filter",
   },
 ];

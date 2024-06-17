@@ -56,7 +56,7 @@ export default function VehicleWithId() {
       <div className="h-full flex flex-col pt-12 items-center">
         <Button
           onClick={() => {
-            router.push(`/vehicle/${id}/upload`);
+            router.push(`/vehicles/${id}/upload`);
           }}
         >
           Upload

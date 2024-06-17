@@ -19,8 +19,8 @@ export function Selector({
 }: SelectorProps) {
   return (
     <Select onValueChange={setSelected}>
-      <SelectTrigger className="w-2/3">
-        <SelectValue placeholder={placeholder} className="w-full" />
+      <SelectTrigger className="text-sm text-muted-foreground">
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="w-full">
         <SelectGroup>

@@ -24,7 +24,7 @@ export default function VehilesPage() {
   if (loading) return <Loading />;
 
   return (
-    <div className="flex flex-col gap-8 h-full items-center">
+    <div className="flex flex-col w-1/2 mx-auto gap-8 h-full items-center">
       <Command className="rounded-lg border shadow-md h-fit mt-8">
         <CommandInput placeholder="Type vehicle name to search" />
         <CommandList>
@@ -32,7 +32,7 @@ export default function VehilesPage() {
           <CommandGroup heading="vehicles">
             {vehicles &&
               vehicles.map((vehicle) => (
-                <Link key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
+                <Link key={vehicle.id} href={`/vehicles/${vehicle.id}`}>
                   <CommandItem className="p-2 text-xl cursor-pointer">
                     <span>{vehicle.name}</span>
                   </CommandItem>
@@ -42,7 +42,7 @@ export default function VehilesPage() {
         </CommandList>
       </Command>
 
-      <Link href="/vehicle/addnew">
+      <Link href="/vehicles/new">
         <Button>Add New Vehicle</Button>
       </Link>
     </div>

@@ -20,8 +20,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { DatePicker } from "./DateInput/DatePicker";
 
 export function readFileAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -44,7 +45,7 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
   const router = useRouter();
   const [type, setType] = useState<string>("");
   const busId = vehicleId;
-  const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
+  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
   const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
   const shouldRun = vehicles ? false : true;
   useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
@@ -126,7 +127,7 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
 
       setLoading(false);
 
-      router.replace(`/vehicle/${busId}/`);
+      router.replace(`/vehicles/${busId}/`);
     } catch (error) {
       toast({
         title: "Error uploading file",
@@ -155,20 +156,24 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Select A Date</Label>
+                <DatePicker
+                  date={expiryDate}
+                  setDate={setExpiryDate}
+                  placeholder="Select expiry date"
+                />
+              </div>
+
+              <div className="flex flex-col space-y-1.5 text-sm text-muted-foreground">
                 <Input
-                  type="date"
-                  onChange={(e) => setExpiryDate(new Date(e.target.value))}
+                  type="file"
+                  accept="image/*"
+                  placeholder="Choose an image"
+                  className=""
+                  onChange={handleFileChange}
                 />
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Choose an image</Label>
-                <Input type="file" accept="image/*" onChange={handleFileChange} />
-              </div>
-
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Document Type</Label>
                 <Selector
                   placeholder="Select a document"
                   label="Documents"

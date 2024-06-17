@@ -18,7 +18,6 @@
   transform: scale(1.05);
 }
 
-
 @keyframes zoomIn {
   from {
     opacity: 0;
