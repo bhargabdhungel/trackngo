@@ -3,6 +3,7 @@ import { DriverDocumentType } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { DriverDocument } from "@/lib/types";
 
 // Configure Cloudinary using environment variables
 cloudinary.config({
@@ -51,7 +52,7 @@ export async function uploadDriverDocument(
     const uploadResult = await cloudinary.uploader.upload(base64Data, {
       resource_type: "image",
     });
-    const newDocument = await prisma.driverDocument.create({
+    const newDocument: DriverDocument = await prisma.driverDocument.create({
       data: {
         driverId,
         link: uploadResult.secure_url,

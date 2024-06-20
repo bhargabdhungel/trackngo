@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { Vehicle } from "@/lib/types";
 
 export default async function addVehicle(vehiclename: string) {
   const user = await authCheck();
@@ -22,15 +23,12 @@ export default async function addVehicle(vehiclename: string) {
     };
   }
 
-  const vehicle = await prisma.bus.create({
+  const vehicle: Vehicle = await prisma.bus.create({
     data: {
       name: vehiclename,
       userId: user.userId,
     },
-    select: {
-      id: true,
-      name: true,
-      userId: true,
+    include: {
       documents: true,
     },
   });

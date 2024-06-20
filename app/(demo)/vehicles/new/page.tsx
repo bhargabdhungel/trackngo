@@ -1,10 +1,10 @@
-import AddVehicle from "@/app/(client)/vehicle/addnew/page";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import NewVehicle from "./NewVehicle";
 
-export default function VehileAddPage() {
+export default function Page() {
   return (
     <ContentLayout title="Add New Vehicle">
-      <AddVehicle />
+      <NewVehicle />
     </ContentLayout>
   );
 }

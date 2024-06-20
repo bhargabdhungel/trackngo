@@ -1,21 +1,15 @@
 "use client";
-import { useRecoilState } from "recoil";
-import { Selector } from "./selector";
-import { vehiclesAtom } from "@/atoms/vehicle";
-import { driversAtom } from "@/atoms/driver";
-import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import useFetchData from "@/hooks/useFetchData";
+import { Selector } from "@/components/selector";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import Loading from "@/app/loading";
 import { Trip } from "@/lib/types";
 import addTrip from "@/app/actions/trip/add";
-import { toast } from "./ui/use-toast";
-import useAuthClient from "@/hooks/useAuthClient";
+import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { tripsAtom } from "@/atoms/trip";
 import getAllTrips from "@/app/actions/trip/getAll";
 import {
   Card,
@@ -25,23 +19,59 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { DatePicker } from "./DateInput/DatePicker";
-// import { DatePicker } from "./datepicker";
+import { DatePicker } from "@/components/DateInput/DatePicker";
+import useData from "@/hooks/useData";
+import useAuthClient from "@/hooks/useAuthClient";
+import { useRecoilValue } from "recoil";
+import { endDateAtom, startDateAtom } from "@/atoms/trip";
+import { vehicleIdAtom } from "@/atoms/vehicle";
+import { driverIdAtom } from "@/atoms/driver";
 
-export default function InputTrip() {
-  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
-  const [drivers, setDrivers] = useRecoilState(driversAtom);
-  const [trips, setTrips] = useRecoilState(tripsAtom);
-  const [loading, setLoading] = useState<boolean>(false);
-  const shouldFetchVehicles: boolean = vehicles ? false : true;
-  const shouldFetchDrivers: boolean = drivers ? false : true;
-  const shouldFetchTrips: boolean = trips ? false : true;
+function shouldUpdate({
+  startDate,
+  endDate,
+  vehicleId,
+  driverId,
+  Trip,
+}: {
+  startDate: Date;
+  endDate: Date;
+  vehicleId: number | null;
+  driverId: number | null;
+  Trip: Trip;
+}) {
+  return (
+    startDate <= Trip.startTime &&
+    Trip.startTime <= endDate &&
+    (vehicleId === null || vehicleId === Trip.busId) &&
+    (driverId === null || driverId === Trip.driverId)
+  );
+}
+
+export default function NewTrip() {
   const router = useRouter();
+  const startDate = useRecoilValue(startDateAtom);
+  const endDate = useRecoilValue(endDateAtom);
+  const vehicleIdMain = useRecoilValue(vehicleIdAtom);
+  const driverIdMain = useRecoilValue(driverIdAtom);
 
-  useFetchData(shouldFetchVehicles, setVehicles, getAllVehicles, setLoading);
-  useFetchData(shouldFetchDrivers, setDrivers, getAllDrivers, setLoading);
-  useFetchData(shouldFetchTrips, setTrips, getAllTrips, setLoading, {});
+  const { data: vehicles, isLoading: isVehiclesLoading } = useData(
+    getAllVehicles,
+    "getAllVehicles"
+  );
+  const { data: drivers, isLoading: isDriversLoading } = useData(
+    getAllDrivers,
+    "getAllDrivers"
+  );
+  const {
+    data: trips,
+    isLoading: isTripsLoading,
+    mutate,
+  } = useData(getAllTrips, "getAllTrips", {
+    startDate,
+    endDate,
+  });
+  const { loading: authLoading, userData } = useAuthClient();
 
   const driverOptions =
     drivers?.map((driver) => ({
@@ -66,13 +96,20 @@ export default function InputTrip() {
   const [description, setDescription] = useState<string>("");
   const [vehicleId, setVehicleId] = useState<string>("");
   const [driverId, setDriverId] = useState<string>("");
-  const { loading: authLoading, userData } = useAuthClient();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  if (loading || authLoading) return <Loading />;
+  if (
+    isDriversLoading ||
+    isVehiclesLoading ||
+    isTripsLoading ||
+    isLoading ||
+    authLoading
+  )
+    return <Loading />;
 
   return (
-    <div className="w-full h-[calc(100vh-112px)] flex justify-center items-center">
-      <Card className="w-[350px] sm:w-[700px] lg:w-[800px] my-2">
+    <div className="w-full h-[calc(100vh-112px)] flex justify-center items-center py-2">
+      <Card className="w-full md:w-1/2">
         <CardHeader>
           <CardTitle>Add a Trip</CardTitle>
           <CardDescription>Add your trip in one-click.</CardDescription>
@@ -97,22 +134,11 @@ export default function InputTrip() {
               </div>
 
               <div className="flex flex-col space-y-1.5">
-                {/* <DatePicker
-                setDate={(date) => {
-                  setStartTime(date!);
-                }}
-                date={startTime}
-              /> */}
                 <DatePicker
                   date={startTime}
                   setDate={(date) => setStartTime(date)}
                   placeholder="Start Date"
                 />
-                {/* <Input
-                  type="datetime-local"
-                  placeholder="Start Date and Time"
-                  onChange={(e) => setStartTime(new Date(e.target.value))}
-                /> */}
               </div>
 
               <div className="flex flex-col space-y-1.5">
@@ -121,12 +147,6 @@ export default function InputTrip() {
                   setDate={(date) => setEndTime(date)}
                   placeholder="End Date"
                 />
-                {/* <Label htmlFor="End Date and Time">End Time</Label>
-              <Input
-                type="datetime-local"
-                placeholder="End Date and Time"
-                onChange={(e) => setEndTime(new Date(e.target.value))}
-              /> */}
               </div>
 
               <div className="flex flex-col space-y-1.5">
@@ -192,8 +212,34 @@ export default function InputTrip() {
         <CardFooter className="flex justify-between">
           <Button
             onClick={async () => {
+              if (!startTime) {
+                toast({
+                  title: "Please select a start time",
+                });
+                return;
+              }
+              if (!startLocation) {
+                toast({
+                  title: "Please select a start location",
+                });
+                return;
+              }
+              if (endLocation) {
+                if (!endTime) {
+                  toast({
+                    title: "Please select an end time",
+                  });
+                  return;
+                }
+              }
+              if (!endTime) {
+                toast({
+                  title: "Please select an end time",
+                });
+                return;
+              }
               const trip: Trip = {
-                userId: userData.userId as number,
+                userId: userData.userId!,
                 startTime: startTime ? startTime : new Date(),
                 endTime: endTime ? endTime : new Date(),
                 routeFrom: startLocation,
@@ -207,25 +253,36 @@ export default function InputTrip() {
                 driverId: parseInt(driverId),
               };
               try {
-                setLoading(true);
+                setIsLoading(true);
                 const response = await addTrip(trip);
-                if (!response.data) throw new Error("Failed to add trip");
-
+                if (response.success) {
+                  if (
+                    shouldUpdate({
+                      startDate,
+                      endDate,
+                      vehicleId: vehicleIdMain,
+                      driverId: driverIdMain,
+                      Trip: response.data!,
+                    })
+                  ) {
+                    mutate({
+                      success: true,
+                      message: "Trip added successfully",
+                      data: [...trips!, response.data!],
+                    });
+                  }
+                }
                 toast({
                   title: response.message,
                   description: response.description,
                 });
-                setTrips((trips) =>
-                  trips ? [...trips, response.data] : [response.data]
-                );
               } catch (error) {
                 toast({
                   title: "Failed to add trip",
-                  description: JSON.stringify(error),
                 });
               } finally {
                 router.replace("/trips");
-                setLoading(false);
+                setIsLoading(false);
               }
             }}
           >

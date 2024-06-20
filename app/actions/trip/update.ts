@@ -4,7 +4,7 @@ import prisma from "@/prisma/db";
 
 export default async function updateTrip(trip: Trip) {
   try {
-    await prisma.trip.update({
+    const updatedTrip: Trip = await prisma.trip.update({
       where: {
         id: trip.id,
       },
@@ -13,7 +13,7 @@ export default async function updateTrip(trip: Trip) {
     return {
       success: true,
       message: "Trip updated successfully",
-      data: trip,
+      data: updatedTrip,
     };
   } catch (error) {
     return {

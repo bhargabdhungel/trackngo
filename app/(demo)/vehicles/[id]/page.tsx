@@ -1,6 +1,5 @@
-import TripAdd from "@/app/(client)/trip/add/page";
-import VehicleWithId from "@/app/(client)/vehicle/[id]/page";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import VehicleWithId from "./VehicleWithId";
 
 export default function TripsPage() {
   return (

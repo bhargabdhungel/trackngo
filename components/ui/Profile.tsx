@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/use-toast";
 import { useSetRecoilState } from "recoil";
-import { driversAtom } from "@/atoms/driver";
+import useData from "@/hooks/useData";
+import getAllDrivers from "@/app/actions/driver/getAll";
 
 interface ProfileProps {
   id: number;
@@ -29,8 +30,11 @@ interface ProfileProps {
 
 function DeleteDriverById({ id }: { id: number }) {
   const router = useRouter();
-  const setDrivers = useSetRecoilState(driversAtom);
-
+  const {
+    data: drivers,
+    isLoading,
+    mutate,
+  } = useData(getAllDrivers, "getAllDrivers");
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -57,9 +61,11 @@ function DeleteDriverById({ id }: { id: number }) {
                   toast({
                     title: "Driver deleted successfully",
                   });
-                  setDrivers((prevDrivers) =>
-                    prevDrivers!.filter((driver) => driver.id !== id)
-                  );
+                  mutate({
+                    success: true,
+                    message: "Driver deleted successfully",
+                    data: drivers?.filter((driver) => driver.id !== id),
+                  });
                   router.replace("/driver");
                 } else {
                   toast({

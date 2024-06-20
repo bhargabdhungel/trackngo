@@ -6,7 +6,7 @@ import authCheck from "../auth/authCheck";
 export default async function updateName(name: string) {
   try {
     const user = await authCheck();
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { userId: user.userId },
       data: { name: name },
     });
@@ -14,12 +14,14 @@ export default async function updateName(name: string) {
     return {
       success: true,
       message: "Username updated successfully",
+      data: updatedUser,
     };
   } catch (error) {
     console.log(error);
     return {
       success: false,
       message: "Error updating user",
+      data: null,
     };
   }
 }

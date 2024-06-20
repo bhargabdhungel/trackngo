@@ -8,24 +8,17 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import Link from "next/link";
-import { useRecoilState } from "recoil";
-import { useEffect, useState } from "react";
-import { driversAtom } from "@/atoms/driver";
 import getAllDrivers from "@/app/actions/driver/getAll";
-import useFetchData from "@/hooks/useFetchData";
 import { Button } from "@/components/ui/button";
+import useData from "@/hooks/useData";
 import Loading from "@/app/loading";
 
 export default function DriversPage() {
-  const [loading, setLoading] = useState(false);
-  const [drivers, setDrivers] = useRecoilState(driversAtom);
-  const shouldRun = drivers ? false : true;
-  useFetchData(shouldRun, setDrivers, getAllDrivers, setLoading);
-
-  if (loading) return <Loading />;
+  const { data: drivers, isLoading } = useData(getAllDrivers, "getAllDrivers");
+  if (isLoading) return <Loading />;
 
   return (
-    <div className="flex flex-col gap-8 h-full items-center">
+    <div className="h-[calc(100vh-112px)] mx-auto gap-4 justify-around flex flex-col w-1/2 items-center py-2">
       <Command className="rounded-lg border shadow-md h-fit mt-8">
         <CommandInput placeholder="Type driver name to search" />
         <CommandList>

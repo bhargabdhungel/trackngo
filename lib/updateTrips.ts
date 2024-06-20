@@ -7,8 +7,8 @@ export function updateTrip(trip: Trip): Trip {
     ...trip,
     balance:
       trip.fare! - (trip.maintenanceCost! + trip.fuelCost! + trip.otherCost!),
-    startTime: format(trip.startTime, "dd/MM/yy, hh:mm a"),
-    endTime: format(trip.endTime, "dd/MM/yy, hh:mm a"),
+    startTime: format(trip.startTime, "dd/MM/yy"),
+    endTime: format(trip.endTime, "dd/MM/yy"),
     fare: trip.fare ? trip.fare : 0,
     maintenanceCost: trip.maintenanceCost ? trip.maintenanceCost : 0,
     fuelCost: trip.fuelCost ? trip.fuelCost : 0,
@@ -18,5 +18,5 @@ export function updateTrip(trip: Trip): Trip {
 }
 
 export default function updateTrips(trips: Trip[]): Trip[] {
-  return trips.map((trip) => updateTrip(trip) || []);
+  return trips.map((trip) => updateTrip(trip));
 }

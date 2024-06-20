@@ -8,23 +8,19 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import Link from "next/link";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { vehiclesAtom } from "@/atoms/vehicle";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
-import { useState } from "react";
 import Loading from "@/app/loading";
-import useFetchData from "@/hooks/useFetchData";
 import { Button } from "@/components/ui/button";
+import useData from "@/hooks/useData";
 
 export default function VehilesPage() {
-  const [loading, setLoading] = useState(false);
-  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
-  const shouldRun = vehicles ? false : true;
-  useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
-  if (loading) return <Loading />;
-
+  const { data: vehicles, isLoading } = useData(
+    getAllVehicles,
+    "getAllVehicles"
+  );
+  if (isLoading) return <Loading />;
   return (
-    <div className="flex flex-col w-1/2 mx-auto gap-8 h-full items-center">
+    <div className="h-[calc(100vh-112px)] mx-auto gap-4 justify-around flex flex-col w-1/2 items-center py-2">
       <Command className="rounded-lg border shadow-md h-fit mt-8">
         <CommandInput placeholder="Type vehicle name to search" />
         <CommandList>

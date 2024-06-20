@@ -1,5 +1,5 @@
-import DriverWithId from "@/app/(client)/driver/[id]/page";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import DriverWithId from "./DriverWithId";
 
 export default function TripsPage() {
   return (

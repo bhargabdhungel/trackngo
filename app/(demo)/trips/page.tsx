@@ -1,10 +1,10 @@
-import GetTrips from "@/app/(client)/trip/Trip";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import TripsPage from "./Trips";
 
-export default function TripsPage() {
+export default function Page() {
   return (
     <ContentLayout title="Trips">
-      <GetTrips />
+      <TripsPage />
     </ContentLayout>
   );
 }

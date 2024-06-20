@@ -1,6 +1,6 @@
 import FilterInput from "./FilterInput";
 import DropdownMenuDemo from "./dropdownForProfile";
-import DownloadButton from "@/app/(client)/trip/Download";
+import DownloadButton from "@/app/(demo)/trips/Download";
 
 export default function AppBar() {
   return (

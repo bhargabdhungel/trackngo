@@ -1,7 +1,7 @@
-import DriversPage from "@/app/(client)/driver/page";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import DriversPage from "./Drivers";
 
-export default function TripsPage() {
+export default function Page() {
   return (
     <ContentLayout title="Drivers">
       <DriversPage />

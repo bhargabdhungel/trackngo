@@ -1,10 +1,10 @@
-import UploadVehicleDoc from "@/app/(client)/vehicle/[id]/upload/page";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import UploadVehicle from "./UploadVehicle";
 
 export default function TripsPage() {
   return (
     <ContentLayout title="Vehicle Document Upload">
-      <UploadVehicleDoc />
+      <UploadVehicle />
     </ContentLayout>
   );
 }

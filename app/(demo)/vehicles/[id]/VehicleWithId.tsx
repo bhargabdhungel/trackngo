@@ -1,33 +1,29 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import getVehicleWithId from "@/app/actions/vehicle/get";
-import { useEffect, useState } from "react";
-import { Vehicle } from "@/lib/types";
+import { useMemo } from "react";
 
-import useFetchData from "@/hooks/useFetchData";
 import Loading from "@/app/loading";
-import { useRecoilState } from "recoil";
-import { vehiclesAtom } from "@/atoms/vehicle";
 import { Button } from "@/components/ui/button";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
 import { DocumentList } from "@/components/Document/Document";
+import useData from "@/hooks/useData";
 
 export default function VehicleWithId() {
   const path = usePathname();
   const id = parseInt(path.split("/").pop() as string, 10);
   const router = useRouter();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
-  const shouldRun = vehicles ? false : true;
-  useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
-  const vehicle = vehicles?.find(
-    (vehicle) => vehicle.id === id && vehicle.documents
+  const { data: vehicles, isLoading } = useData(
+    getAllVehicles,
+    "getAllVehicles"
   );
 
-  console.log(vehicle);
+  const vehicle = useMemo(
+    () => vehicles?.find((v) => v.id === id),
+    [vehicles, id]
+  );
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <>

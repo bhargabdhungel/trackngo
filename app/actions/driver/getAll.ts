@@ -2,18 +2,15 @@
 
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { Driver } from "@/lib/types";
 
-export default async function getAllDrivers() {
+async function getAllDrivers() {
   const user = await authCheck();
-  const drivers = await prisma.driver.findMany({
+  const drivers: Driver[] = await prisma.driver.findMany({
     where: {
       userId: user.userId,
     },
-    select: {
-      id: true,
-      userId: true,
-      name: true,
-      contact: true,
+    include: {
       documents: true,
     },
   });
@@ -23,3 +20,6 @@ export default async function getAllDrivers() {
     data: drivers,
   };
 }
+
+getAllDrivers.uniqueId = "getAllDrivers";
+export default getAllDrivers;

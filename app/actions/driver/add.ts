@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { Driver } from "@/lib/types";
 
 export default async function addDriver(name: string, contact: string) {
   const user = await authCheck();
@@ -35,17 +36,14 @@ export default async function addDriver(name: string, contact: string) {
   }
 
   // Create new driver
-  const driver = await prisma.driver.create({
+  const driver: Driver = await prisma.driver.create({
     data: {
       name: name,
       contact: contact,
       userId: user.userId,
     },
-    select: {
-      id: true,
-      name: true,
-      contact: true,
-      userId: true,
+    include: {
+      documents: true,
     },
   });
 

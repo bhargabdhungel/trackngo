@@ -1,4 +1,5 @@
 "use server";
+import { Trip } from "@/lib/types";
 import authCheck from "../auth/authCheck";
 import prisma from "@/prisma/db";
 
@@ -8,8 +9,8 @@ export default async function getAllTrips({
   driverId = null,
   vehicleId = null,
 }: {
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: Date | null;
+  endDate?: Date | null;
   driverId?: number | null;
   vehicleId?: number | null;
 }) {
@@ -45,7 +46,7 @@ export default async function getAllTrips({
       whereClause.busId = vehicleId;
     }
 
-    const trips = await prisma.trip.findMany({
+    const trips: Trip[] = await prisma.trip.findMany({
       where: whereClause,
       orderBy: {
         startTime: "desc",

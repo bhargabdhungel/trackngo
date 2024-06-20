@@ -1,18 +1,16 @@
 "use client";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { DriverDocumentType } from "@prisma/client";
+import Loading from "@/app/loading";
 import { Input } from "@/components/ui/input";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "./ui/use-toast";
-import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
-import { BusDocumentType } from "@prisma/client";
-import { Selector } from "./selector";
-import { uploadVehicleDocument } from "@/app/actions/doc/vehicle";
-import { useRecoilState } from "recoil";
-import { vehiclesAtom } from "@/atoms/vehicle";
-import useFetchData from "@/hooks/useFetchData";
-import getAllVehicles from "@/app/actions/vehicle/getAll";
-import { Vehicle } from "@/lib/types";
-
+import { Selector } from "@/components/selector";
+import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
+import { uploadDriverDocument } from "@/app/actions/doc/driver";
+import getAllDrivers from "@/app/actions/driver/getAll";
+import { readFileAsDataURL } from "@/app/(demo)/vehicles/[id]/upload/UploadVehicle";
+import { Driver } from "@/lib/types";
 import {
   Card,
   CardContent,
@@ -21,34 +19,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { DatePicker } from "./DateInput/DatePicker";
+import { DatePicker } from "@/components/DateInput/DatePicker";
+import useData from "@/hooks/useData";
 
-export function readFileAsDataURL(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => {
-      toast({
-        title: "Error reading file",
-        description: "Please try again later",
-      });
-      reject(error);
-    };
-    reader.readAsDataURL(file);
-  });
+const driverDocOptions = Object.keys(DriverDocumentType).map((key) => ({
+  value: key,
+  label: key,
+}));
+
+function getDriverId(path: string) {
+  const segments = path.split("/");
+  const stringId = segments.length > 1 ? segments[segments.length - 2] : null;
+  return stringId ? parseInt(stringId, 10) : null;
 }
 
-export function InputFile({ vehicleId }: { vehicleId: number }) {
+export default function UploadDriver() {
+  const path = usePathname();
+  const driverId = getDriverId(path);
+
   const [inputFile, setInputFile] = useState<File | null>(null);
+  const [type, setType] = useState<string>("");
+  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const [type, setType] = useState<string>("");
-  const busId = vehicleId;
-  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
-  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
-  const shouldRun = vehicles ? false : true;
-  useFetchData(shouldRun, setVehicles, getAllVehicles, setLoading);
+
+  const {
+    data: drivers,
+    isLoading,
+    mutate,
+  } = useData(getAllDrivers, "getAllDrivers");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,6 +61,8 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
       });
     }
   };
+
+  if (loading || isLoading) return <Loading />;
 
   const handleUpload = async () => {
     if (!inputFile) {
@@ -77,7 +79,6 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
       });
       return;
     }
-
     if (!expiryDate) {
       toast({
         title: "No expiry date selected",
@@ -86,37 +87,34 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
       return;
     }
 
-    if (isNaN(busId)) {
-      toast({
-        title: "Invalid bus ID",
-        description: "Please refresh go back and try again",
-      });
-      return;
-    }
-
     try {
       setLoading(true);
       const fileData = await readFileAsDataURL(inputFile);
-      const res = await uploadVehicleDocument(
+      const res = await uploadDriverDocument(
         fileData,
-        busId,
-        type as BusDocumentType,
+        driverId!,
+        type as DriverDocumentType,
         expiryDate
       );
 
-      const newVehicles: Vehicle[] = vehicles!.map((vehicle: Vehicle) => {
-        if (vehicle.id === busId) {
+      const newDrivers: Driver[] = drivers!.map((driver: Driver) => {
+        if (driver.id === driverId) {
           return {
-            ...vehicle,
-            documents: vehicle.documents
-              ? [...vehicle.documents, res.data!]
+            ...driver,
+            documents: driver.documents
+              ? [...driver.documents, res.data!]
               : [res.data!],
           };
         } else {
-          return vehicle;
+          return driver;
         }
       });
-      setVehicles(newVehicles);
+
+      mutate({
+        success: true,
+        message: "File uploaded successfully",
+        data: newDrivers,
+      });
 
       toast({
         title: res.success
@@ -124,26 +122,17 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
           : "Error uploading file",
         description: res.message,
       });
-
-      setLoading(false);
-
-      router.replace(`/vehicles/${busId}/`);
     } catch (error) {
       toast({
-        title: "Error uploading file",
+        title: "Upload failed",
         description: "Please try again later",
       });
-      console.error(error);
+      console.error("Error uploading document:", error);
+    } finally {
+      setLoading(false);
+      router.replace(`/drivers/${driverId}`);
     }
   };
-
-  // iterate over the BusDocumentType enum and create an array of options
-  const fruitOptions = Object.keys(BusDocumentType).map((key) => ({
-    value: key,
-    label: key,
-  }));
-
-  if (loading || !vehicles) return <div>Loading...</div>;
 
   return (
     <>
@@ -168,7 +157,6 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
                   type="file"
                   accept="image/*"
                   placeholder="Choose an image"
-                  className=""
                   onChange={handleFileChange}
                 />
               </div>
@@ -178,7 +166,7 @@ export function InputFile({ vehicleId }: { vehicleId: number }) {
                   placeholder="Select a document"
                   label="Documents"
                   setSelected={setType}
-                  options={fruitOptions}
+                  options={driverDocOptions}
                 />
               </div>
             </div>

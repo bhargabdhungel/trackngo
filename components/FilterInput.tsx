@@ -12,26 +12,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { DatePicker } from "./DateInput/DatePicker";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Selector } from "./selector";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  vehicleIdAtom,
-  vehicleOptionsSelector,
-  vehicleSelector,
-  vehiclesAtom,
-} from "@/atoms/vehicle";
-import useFetchData from "@/hooks/useFetchData";
-import getAllVehicles from "@/app/actions/vehicle/getAll";
-import {
-  driverIdAtom,
-  driverOptionsSelector,
-  driverSelector,
-  driversAtom,
-} from "@/atoms/driver";
+import { useRecoilState } from "recoil";
+import { vehicleIdAtom } from "@/atoms/vehicle";
+import { driverIdAtom } from "@/atoms/driver";
+import { endDateAtom, startDateAtom } from "@/atoms/trip";
+import useData from "@/hooks/useData";
 import getAllDrivers from "@/app/actions/driver/getAll";
-import { tripsAtom } from "@/atoms/trip";
-import getAllTrips from "@/app/actions/trip/getAll";
+import getAllVehicles from "@/app/actions/vehicle/getAll";
 
 export default function FilterInput() {
   const date: Date = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -41,59 +30,47 @@ export default function FilterInput() {
   const [localDriverId, setLocalDriverId] = useState<string | null>(null);
   const [vehicleId, setVehicleId] = useRecoilState(vehicleIdAtom);
   const [driverId, setDriverId] = useRecoilState(driverIdAtom);
-  const [startDate, setStartDate] = useState(localStartDate ?? date);
-  const [endDate, setEndDate] = useState(localEndDate ?? new Date());
-
-  const [loadingVehicles, setLoadingVehicles] = useState<boolean>(false);
-  const [loadingDrivers, setLoadingDrivers] = useState<boolean>(false);
-  const [loadingTrips, setLoadingTrips] = useState<boolean>(false);
-
-  const [shouldRunVehicles, setShouldRunVehicles] = useState<boolean>(false);
-  const [shouldRunDrivers, setShouldRunDrivers] = useState<boolean>(false);
-  const [shouldRunTrips, setShouldRunTrips] = useState<boolean>(false);
-
-  const [vehicles, setVehicles] = useRecoilState(vehiclesAtom);
-  const [drivers, setDrivers] = useRecoilState(driversAtom);
-  const [trips, setTrips] = useRecoilState(tripsAtom);
-
-  const vehicleOptions = useRecoilValue(vehicleOptionsSelector);
-  const driverOptions = useRecoilValue(driverOptionsSelector);
-
-  const vehicle = useRecoilValue(vehicleSelector);
-  const driver = useRecoilValue(driverSelector);
-
+  const [startDate, setStartDate] = useRecoilState(startDateAtom);
+  const [endDate, setEndDate] = useRecoilState(endDateAtom);
   const [open, setOpen] = useState<boolean>(false);
 
-  useFetchData(
-    shouldRunVehicles,
-    setVehicles,
-    getAllVehicles,
-    setLoadingVehicles
+  const { data: drivers, isLoading: loadingDrivers } = useData(
+    getAllDrivers,
+    "getAllDrivers"
   );
-  useFetchData(shouldRunDrivers, setDrivers, getAllDrivers, setLoadingDrivers);
-  useFetchData(shouldRunTrips, setTrips, getAllTrips, setLoadingTrips, {
-    startDate,
-    endDate,
-    vehicleId,
-    driverId,
-  });
 
-  useEffect(() => {
-    if (vehicles) setShouldRunVehicles(false);
-    else setShouldRunVehicles(true);
-  }, [vehicles]);
+  const { data: vehicles, isLoading: loadingVehicles } = useData(
+    getAllVehicles,
+    "getAllVehicles"
+  );
 
-  useEffect(() => {
-    if (drivers) setShouldRunDrivers(false);
-    else setShouldRunDrivers(true);
-  }, [drivers]);
+  const driverOptions = useMemo(() => {
+    if (loadingDrivers) return [];
+    return drivers!.map((driver) => ({
+      value: driver.id!.toString(),
+      label: driver.name,
+    }));
+  }, [drivers, loadingDrivers]);
 
-  useEffect(() => {
-    if (trips) setShouldRunTrips(false);
-    else setShouldRunTrips(true);
-  }, [trips]);
+  const vehicleOptions = useMemo(() => {
+    if (loadingVehicles) return [];
+    return vehicles!.map((vehicle) => ({
+      value: vehicle.id!.toString(),
+      label: vehicle.name,
+    }));
+  }, [vehicles, loadingVehicles]);
 
-  if (loadingVehicles || loadingDrivers) return null;
+  const vehicle = useMemo(() => {
+    if (localVehicleId && vehicles)
+      return vehicles.find((v) => v.id!.toString() === localVehicleId);
+    return null;
+  }, [localVehicleId, vehicles]);
+
+  const driver = useMemo(() => {
+    if (localDriverId && drivers)
+      return drivers.find((d) => d.id!.toString() === localDriverId);
+    return null;
+  }, [localDriverId, drivers]);
 
   return (
     <Sheet open={open}>
@@ -103,7 +80,7 @@ export default function FilterInput() {
           className="ml-2"
           onClick={() => setOpen(true)}
         >
-          {loadingTrips ? "Filtering trips..." : "Filter"}
+          Filter
         </Button>
       </SheetTrigger>
       <SheetContent side={"left"}>
@@ -131,9 +108,7 @@ export default function FilterInput() {
             <Selector
               options={vehicleOptions}
               label="Vehicle"
-              placeholder={
-                vehicle && vehicleId ? vehicle.name : "Select a vehicle"
-              }
+              placeholder={vehicle ? vehicle.name : "Select a vehicle"}
               setSelected={setLocalVehicleId}
             />
           </div>
@@ -144,7 +119,7 @@ export default function FilterInput() {
             <Selector
               options={driverOptions}
               label="Driver"
-              placeholder={driver && driverId ? driver.name : "Select a driver"}
+              placeholder={driver ? driver.name : "Select a driver"}
               setSelected={setLocalDriverId}
             />
           </div>
@@ -164,7 +139,6 @@ export default function FilterInput() {
                   setVehicleId(null);
                   setLocalVehicleId(null);
                   setDriverId(null);
-                  setShouldRunTrips(true);
                   setOpen(false);
                 }}
               >
@@ -177,8 +151,8 @@ export default function FilterInput() {
                     setVehicleId(parseInt(localVehicleId as string, 10));
                   if (localDriverId)
                     setDriverId(parseInt(localDriverId as string, 10));
-
-                  setShouldRunTrips(true);
+                  setStartDate(localStartDate!);
+                  setEndDate(localEndDate!);
                   setOpen(false);
                 }}
               >

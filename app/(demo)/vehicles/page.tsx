@@ -1,7 +1,7 @@
-import VehilesPage from "@/app/(client)/vehicle/page";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import VehilesPage from "./Vehicles";
 
-export default function TripsPage() {
+export default function Page() {
   return (
     <ContentLayout title="Vehicles">
       <VehilesPage />

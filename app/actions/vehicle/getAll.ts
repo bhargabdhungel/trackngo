@@ -2,17 +2,15 @@
 
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { Vehicle } from "@/lib/types";
 
 export default async function getAllVehicles() {
   const user = await authCheck();
-  const buses = await prisma.bus.findMany({
+  const buses: Vehicle[] = await prisma.bus.findMany({
     where: {
       userId: user.userId,
     },
-    select: {
-      id: true,
-      name: true,
-      userId: true,
+    include: {
       documents: true,
     },
   });

@@ -1,10 +1,10 @@
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-import InputTrip from "@/components/input-file-trip";
+import NewTrip from "./NewTrip";
 
-export default function TripsPage() {
+export default function Page() {
   return (
     <ContentLayout title="Add New Trip">
-      <InputTrip />
+      <NewTrip />
     </ContentLayout>
   );
 }
