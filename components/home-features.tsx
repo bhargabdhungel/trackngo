@@ -1,24 +1,4 @@
-import { title } from "process";
 import { HoverEffect } from "./ui/card-hover-effect";
-
-// Trip Scheduler
-// Easily add trips according to your preferred timings, giving you flexibility and convenience in planning your travels.
-
-// Travel Options
-// Enables the inclusion of any vehicle for travel, offering flexibility and a wider range of transportation choices.
-
-// Document Management
-// Facilitates online storage for vehicle and driver documents, ensuring easy access and organization of important records.
-
-// Document Vault
-// Securely upload and manage essential documents like licenses, insurance, and vehicle registrations, and many more for easy retrieval and organization.
-
-// Trip Sheet
-// Allows users to download a sheet containing all added trips, facilitating easy access and organization of trip details.
-
-// Trip Organizer
-// Empowers users to filter trips based on driver, timings, and vehicle details, optimizing planning and organization efficiency.
-
 export default function HomeFeatures() {
   return (
     <div className="w-4/5 mx-auto px-8">
@@ -29,7 +9,7 @@ export default function HomeFeatures() {
     </div>
   );
 }
-export const projects = [
+const projects = [
   {
     title: "Trip Scheduler",
     description:
