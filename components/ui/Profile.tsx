@@ -66,18 +66,17 @@ function DeleteDriverById({ id }: { id: number }) {
                     message: "Driver deleted successfully",
                     data: drivers?.filter((driver) => driver.id !== id),
                   });
-                  router.replace("/driver");
                 } else {
                   toast({
                     title: response.message,
                   });
-                  router.replace("/driver");
                 }
               } catch (error) {
                 toast({
                   title: "Server error",
                 });
-                router.replace("/driver");
+              } finally {
+                router.replace("/drivers");
               }
             }}
           >

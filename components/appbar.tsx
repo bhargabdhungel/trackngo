@@ -1,6 +1,6 @@
-import FilterInput from "./FilterInput";
+import FilterInput from "../app/(demo)/download/FilterInput";
 import DropdownMenuDemo from "./dropdownForProfile";
-import DownloadButton from "@/app/(demo)/trips/Download";
+import DownloadButton from "@/app/(demo)/download/Download";
 
 export default function AppBar() {
   return (

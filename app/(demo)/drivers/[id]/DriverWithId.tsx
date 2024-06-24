@@ -79,8 +79,8 @@ export default function DriverWithId() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="flex flex-col">
-      <div className="mt-5 flex justify-center">
+    <div className="w-full h-[calc(100vh-112px)]">
+      {/* <div className="mt-5 flex justify-center">
         <Profile
           id={driver?.id!}
           image={
@@ -95,7 +95,7 @@ export default function DriverWithId() {
 
       <div className="flex items-center justify-center">
         {driver?.documents && <HoverDocs documents={driver.documents} />}
-      </div>
+      </div> */}
     </div>
   );
 }

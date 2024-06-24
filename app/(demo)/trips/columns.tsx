@@ -29,21 +29,15 @@ import { toast } from "@/components/ui/use-toast";
 import deleteTrip from "@/app/actions/trip/delete";
 import useData from "@/hooks/useData";
 import getAllTrips from "@/app/actions/trip/getAll";
-import { useState } from "react";
+import { endDateAtom } from "@/atoms/trip";
 
-// Component to handle trip deletion
 function DeleteTrip({ id }: { id: number }) {
-  const {
-    data: trips,
-    isLoading,
-    mutate,
-  } = useData(getAllTrips, "getAllTrips", {});
+  const { data: trips, mutate } = useData(getAllTrips, "getAllTrips", {});
 
-  const [loading, setLoading] = useState(false);
+  const setEndDate = useSetRecoilState(endDateAtom);
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setLoading(true);
     try {
       const response = await deleteTrip(id);
       if (response.success) {
@@ -52,6 +46,7 @@ function DeleteTrip({ id }: { id: number }) {
           message: "Trip deleted",
           data: trips!.filter((trip) => trip.id !== id),
         });
+        setEndDate(new Date());
         toast({ title: "Trip deleted" });
       } else {
         toast({ title: response.message });
@@ -59,7 +54,6 @@ function DeleteTrip({ id }: { id: number }) {
     } catch (error) {
       toast({ title: "Server error" });
     } finally {
-      setLoading(false);
     }
   };
 
@@ -69,7 +63,7 @@ function DeleteTrip({ id }: { id: number }) {
         className="w-full flex justify-start"
         onClick={(event) => event.stopPropagation()}
       >
-        {loading ? "Deleting..." : "Delete"}
+        Delete
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

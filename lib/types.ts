@@ -78,19 +78,6 @@ export interface FormattedTrip {
   balance?: number;
 }
 
-export enum Process {
-  REST = "REST",
-  PENDING = "PENDING",
-  FINISHED = "FINISHED",
-  FAILED = "FAILED",
-}
-
-export interface Document {
-  type: string;
-  link: string;
-  expiryDate?: Date;
-}
-
 export interface UserData {
   userId: number;
   name: string;

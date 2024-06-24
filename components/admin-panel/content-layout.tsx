@@ -10,7 +10,7 @@ export function ContentLayout({ title, children }: ContentLayoutProps) {
   return (
     <div className="flex flex-col h-full">
       <Navbar title={title} />
-      <ScrollArea className="container h-[calc(100vh-112px)]">
+      <ScrollArea className="w-full h-[calc(100vh-112px)]">
         {children}
       </ScrollArea>
     </div>
