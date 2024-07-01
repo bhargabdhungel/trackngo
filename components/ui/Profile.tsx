@@ -132,7 +132,7 @@ export default function Profile({ id, image, name, contact, documents }: Profile
         </CardContent>
         <CardContent className="w-full lg:w-1/2">
           <div className="p-4">
-            {documents && <HoverDocs documents={documents} />}
+            {documents && <HoverDocs docs={documents} />}
           </div>
         </CardContent>
       </Card>
