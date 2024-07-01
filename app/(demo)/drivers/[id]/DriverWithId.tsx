@@ -5,66 +5,81 @@ import { useMemo } from "react";
 import Loading from "@/app/loading";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import Profile from "@/components/ui/Profile";
-import { HoverDocs } from "@/components/Document/HoverDocs";
 import useData from "@/hooks/useData";
 import { DriverDocumentType } from "@prisma/client";
+import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
+import { driversAtom } from "@/atoms/driver";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import deleteDriver from "@/app/actions/driver/deleteDriver";
+import { toast } from "@/components/ui/use-toast";
 
-// function DeleteDriverById({ id }: { id: number }) {
-//   const router = useRouter();
-//   const setDrivers = useSetRecoilState(driversAtom);
+function DeleteDriverById({ id }: { id: number }) {
+  const router = useRouter();
+  const setDrivers = useSetRecoilState(driversAtom);
 
-//   return (
-//     <AlertDialog>
-//       <AlertDialogTrigger
-//         className="border py-2 px-4 rounded-md hover:bg-white hover:bg-opacity-10"
-//         onClick={(event) => event.stopPropagation()}
-//       >
-//         Delete
-//       </AlertDialogTrigger>
-//       <AlertDialogContent>
-//         <AlertDialogHeader>
-//           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-//           <AlertDialogDescription>
-//             This action cannot be undone. This will permanently delete the
-//             driver, its documents and trips.
-//           </AlertDialogDescription>
-//         </AlertDialogHeader>
-//         <AlertDialogFooter>
-//           <AlertDialogCancel>Cancel</AlertDialogCancel>
-//           <AlertDialogAction
-//             onClick={async () => {
-//               try {
-//                 const response = await deleteDriver(id);
-//                 if (response.success) {
-//                   toast({
-//                     title: "Driver deleted successfully",
-//                   });
-//                   setDrivers((prevDrivers) =>
-//                     prevDrivers!.filter((driver) => driver.id !== id)
-//                   );
-//                   router.replace("/driver");
-//                 } else {
-//                   toast({
-//                     title: response.message,
-//                   });
-//                   router.replace("/driver");
-//                 }
-//               } catch (error) {
-//                 toast({
-//                   title: "Server error",
-//                 });
-//                 router.replace("/driver");
-//               }
-//             }}
-//           >
-//             {" "}
-//             Delete
-//           </AlertDialogAction>
-//         </AlertDialogFooter>
-//       </AlertDialogContent>
-//     </AlertDialog>
-//   );
-// }
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger
+        className="border rounded-md hover:bg-white hover:bg-opacity-10"
+        onClick={(event) => event.stopPropagation()}
+      >
+        Delete
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the
+            driver, its documents and trips.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              try {
+                const response = await deleteDriver(id);
+                if (response.success) {
+                  toast({
+                    title: "Driver deleted successfully",
+                  });
+                  setDrivers((prevDrivers) =>
+                    prevDrivers!.filter((driver) => driver.id !== id)
+                  );
+                  router.replace("/driver");
+                } else {
+                  toast({
+                    title: response.message,
+                  });
+                  router.replace("/driver");
+                }
+              } catch (error) {
+                toast({
+                  title: "Server error",
+                });
+                router.replace("/driver");
+              }
+            }}
+          >
+            {" "}
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 export default function DriverWithId() {
   const path = usePathname();
@@ -80,7 +95,7 @@ export default function DriverWithId() {
 
   return (
     <div className="w-full h-[calc(100vh-112px)]">
-      {/* <div className="mt-5 flex justify-center">
+      <div className="mt-5 flex justify-center">
         <Profile
           id={driver?.id!}
           image={
@@ -90,12 +105,9 @@ export default function DriverWithId() {
           }
           name={driver?.name}
           contact={driver?.contact}
+          documents={driver?.documents}
         />
       </div>
-
-      <div className="flex items-center justify-center">
-        {driver?.documents && <HoverDocs documents={driver.documents} />}
-      </div> */}
     </div>
   );
 }
