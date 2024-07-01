@@ -1,53 +1,56 @@
 "use client";
-
-import React, { useEffect } from "react";
-import {
-  BarChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-
-import { LineChart, Line } from "recharts";
-
-interface DataPoint {
-  name: string;
-  others: number;
-  pv: number;
-  fare: number;
-}
-
-const data: DataPoint[] = [
-  { name: "1st Week", others: 400, pv: 2400, fare: 1200 },
-  { name: "2nd Week", others: 300, pv: 1398, fare: 2210 },
-  { name: "3rd Week", others: 200, pv: 9800, fare: 2290 },
-  { name: "4th Week", others: 278, pv: 3908, fare: 2000 },
-  { name: "5th Week", others: 189, pv: 4800, fare: 2181 },
-  { name: "6th Week", others: 239, pv: 3800, fare: 2500 },
-  { name: "7th Week", others: 349, pv: 4300, fare: 2100 },
-];
-
+import Echart from "./Echarts";
+import getOptions from "./getOptions";
+import useData from "@/hooks/useData";
+import getAllTrips from "@/app/actions/trip/getAll";
+import Loading from "@/app/loading";
+import { useMemo } from "react";
+import updateTrips from "@/lib/updateTrips";
+import { useRecoilValue } from "recoil";
+import { chartAtom } from "@/atoms/chart";
+import { endDateAtom, startDateAtom } from "@/atoms/trip";
 export default function Chart() {
+  const chartType = useRecoilValue(chartAtom);
+  const startDate = useRecoilValue(startDateAtom);
+  const endDate = useRecoilValue(endDateAtom);
+  const { data, isLoading } = useData(getAllTrips, "getAllTrips", {
+    startDate,
+    endDate,
+  });
+
+  const trips = useMemo(() => {
+    console.log(data);
+    if (!data) return [];
+    else return updateTrips(data);
+  }, [data]);
+
+  const options = useMemo(
+    () => getOptions(trips, chartType),
+    [trips, chartType]
+  );
+
+  if (isLoading || !data) return <Loading />;
+  if (trips.length === 0)
+    return (
+      <div className="w-full h-full">
+        <h1 className="text-center text-2xl font-bold text-gray-500">
+          No trips found
+        </h1>
+      </div>
+    );
+  if (trips.length < 5) {
+    return (
+      <div className="w-full h-full">
+        <h1 className="text-center text-2xl font-bold text-gray-500">
+          Please add atleast 5 trips to see the stats
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-[calc(100vh-112px)] items-center justify-center">
-      <LineChart
-        width={600}
-        height={300}
-        data={data}
-        margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-      >
-        <Line type="monotone" dataKey="fare" stroke="#8884d8" />
-        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-        <XAxis dataKey="name " />
-        {/* <XAxis dataKey="fare" /> */}
-        <YAxis />
-        <Tooltip />
-      </LineChart>
+      <Echart className="w-full h-full" echartOptions={options} />
     </div>
   );
 }

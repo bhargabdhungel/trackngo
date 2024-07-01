@@ -88,3 +88,24 @@ export interface UserData {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type TripSummary = {
+  totalMaintenanceCost: number;
+  totalFuelCost: number;
+  totalFare: number;
+  totalOtherCost: number;
+  totalBalance: number;
+  maxMaintenanceCost: number;
+  maxFuelCost: number;
+  maxBalance: number;
+  maxOtherCost: number;
+};
+
+export enum ChartType {
+  Pie = "pie",
+  Radar = "radar",
+  Smooth = "smooth",
+  Area = "area",
+  Discrete = "discrete",
+  Race = "race",
+}
