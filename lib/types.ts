@@ -20,7 +20,7 @@ export interface DriverDocument {
   driverId: number;
   type: DriverDocumentType;
   link: string;
-  expiryDate: string;
+  expiryDate: Date;
 }
 
 export interface Vehicle {
