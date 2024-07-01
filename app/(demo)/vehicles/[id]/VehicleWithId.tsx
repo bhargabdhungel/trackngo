@@ -44,7 +44,7 @@ export default function VehicleWithId() {
           Documents
         </p>
         <hr className="border-t-2 border-gray-500 mx-20 mt-2 mb-10" />
-        {vehicle?.documents && <DocumentList documents={vehicle.documents} />}
+        {/* {vehicle?.documents && <DocumentList documents={vehicle.documents} />} */}
       </div>
 
       {/* --------------------- */}

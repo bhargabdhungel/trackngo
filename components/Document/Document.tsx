@@ -1,33 +1,34 @@
 import ImageComponent from "next/image";
-import { Document } from "@/lib/types";
+// import { Document } from "@/lib/types";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
 import Modal from "../Modal";
 import { useState } from "react";
-import { HoverDocs } from "./HoverDocs";
+// import { HoverDocs } from "./HoverDocs";
 
 interface DocumentListProps {
-    documents: Document[];
+  documents: Document[];
 }
 
 export function DocumentList({ documents }: DocumentListProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentImage, setCurrentImage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState("");
 
-    const openModal = (imageSrc: string) => {
-        setCurrentImage(imageSrc);
-        setIsModalOpen(true);
-    };
+  const openModal = (imageSrc: string) => {
+    setCurrentImage(imageSrc);
+    setIsModalOpen(true);
+  };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setCurrentImage("");
-    };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCurrentImage("");
+  };
 
-    return (
-        <>
-            <div className="flex flex-wrap justify-around mx-20">
+  return (
+    <>
+      <h1>rohan @todo</h1>
+      {/* <div className="flex flex-wrap justify-around mx-20">
                 {documents
                     .map((doc, index) => (
                         <div
@@ -70,7 +71,7 @@ export function DocumentList({ documents }: DocumentListProps) {
                     ))}
 
                 <Modal isOpen={isModalOpen} onClose={closeModal} imageSrc={currentImage} />
-            </div>
-        </>
-    );
+            </div> */}
+    </>
+  );
 }
