@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage } from "../../components/ui/avatar";
 import deleteDriver from "@/app/actions/driver/deleteDriver";
 import { useRouter } from "next/navigation";
@@ -95,9 +95,6 @@ export default function Profile({ id, image, name, contact, documents }: Profile
   const noimage =
     "https://imgs.search.brave.com/xynPF2RX8yrKnvYLoAEpP8H4sadW2BamRD5N6uGqGcg/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzAzLzU5LzU4Lzkx/LzM2MF9GXzM1OTU4/OTE4Nl9KRExsOGRJ/V29CTmYxaXFFa0h4/aFVlZU91bHgwd09D/NS5qcGc";
   const router = useRouter();
-  const tags = Array.from({ length: 50 }).map(
-    (_, i, a) => `v1.2.0-beta.${a.length - i}`
-  )
 
   return (
     <>
