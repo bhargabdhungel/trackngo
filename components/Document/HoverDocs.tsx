@@ -6,19 +6,21 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
-// import { Document } from "@/lib/types";
 import { format } from "date-fns";
 import { useState } from "react";
 import Modal from "../Modal";
 import { DriverDocument } from "@/lib/types";
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { deleteDriverDocument } from "@/app/actions/doc/driver";
+import { toast } from "@/components/ui/use-toast";
 
 interface DocumentListProps {
-  documents: DriverDocument[];
+  docs: DriverDocument[];
 }
 
-export function HoverDocs({ documents }: DocumentListProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export function HoverDocs({ docs }: DocumentListProps) {
+  const [documents, setDocuments] = useState<DriverDocument[]>(docs);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState("");
 
   const openModal = (imageSrc: string) => {
@@ -30,6 +32,22 @@ export function HoverDocs({ documents }: DocumentListProps) {
     setIsModalOpen(false);
     setCurrentImage("");
   };
+
+  async function handleDeleteDoc(id: number) {
+    try {
+      const response = await deleteDriverDocument(id);
+      toast({
+        title: response.message,
+      })
+      if(response.success) {
+        setDocuments(documents.filter(doc => doc.id !== id));
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to delete document",
+      });
+    }
+  }
 
   return (
     <>
@@ -60,7 +78,10 @@ export function HoverDocs({ documents }: DocumentListProps) {
                     </div>
                     <div>
                       <Button onClick={() => openModal(doc.link)}>View</Button>
-                      <Button className="m-2" variant="outline">
+                      <Button
+                        className="m-2" variant="outline"
+                        onClick={() => { handleDeleteDoc(doc.id!) }}
+                      >
                         Delete
                       </Button>
                     </div>
