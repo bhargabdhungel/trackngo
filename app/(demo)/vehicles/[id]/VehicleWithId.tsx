@@ -101,36 +101,38 @@ export default function VehicleWithId() {
   if (isLoading) return <Loading />;
 
   return (
-    <>
-      <div className="flex items-center justify-center mt-10">
-        <Card className="w-4/5 flex flex-col lg:flex-row">
-          <CardContent className="w-full lg:w-1/2">
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5 items-center sm:justify-center">
-                <div className="flex flex-col sm:ml-0 ml-3">
-                  <p className="sm:text-2xl text-md sm:text-center mt-10 mb-5">{vehicle?.name}</p>
-                  <div className="flex flex-col">
-                    <DeleteVehicleById id={id} />
-                    <Button
-                      className="my-4"
-                      onClick={() => {
-                        router.push(`/vehicles/${id}/upload`);
-                      }}
-                    >
-                      <p className="py-1">Upload</p>
-                    </Button>
-                  </div>
+    <div className="w-full h-[calc(100vh-112px)] flex justify-center items-center">
+      <Card className="w-4/5 flex flex-col lg:flex-row">
+        <CardContent className="w-full lg:w-1/2">
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5 items-center sm:justify-center">
+              <div className="flex flex-col sm:ml-0 ml-3">
+                <p className="sm:text-2xl text-md sm:text-center mt-10 mb-5">
+                  {vehicle?.name}
+                </p>
+                <div className="flex flex-col">
+                  <DeleteVehicleById id={id} />
+                  <Button
+                    className="my-4"
+                    onClick={() => {
+                      router.push(`/vehicles/${id}/upload`);
+                    }}
+                  >
+                    <p className="py-1">Upload</p>
+                  </Button>
                 </div>
               </div>
             </div>
-          </CardContent>
-          <CardContent className="w-full lg:w-1/2">
-            <div className="p-4">
-              {vehicle?.documents && <ListVehicleDocs docs={vehicle?.documents} />}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+          </div>
+        </CardContent>
+        <CardContent className="w-full lg:w-1/2">
+          <div className="p-4">
+            {vehicle?.documents && (
+              <ListVehicleDocs docs={vehicle?.documents} />
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

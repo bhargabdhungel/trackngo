@@ -2,7 +2,7 @@ import { HoverEffect } from "./ui/card-hover-effect";
 export default function HomeFeatures() {
   return (
     <div className="w-4/5 mx-auto px-8">
-      <h1 className="text-6xl font-normal text-neutral-600 dark:text-neutral-400">
+      <h1 className="text-7xl font-normal text-neutral-600 dark:text-neutral-400">
         Key Features
       </h1>
       <HoverEffect items={projects} />

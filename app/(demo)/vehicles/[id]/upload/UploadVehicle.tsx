@@ -159,7 +159,7 @@ export default function UploadVehicle() {
       setInputFile(null);
       setType("");
       setExpiryDate(null);
-      router.replace(`/vehicles/${vehicleId}`)
+      router.replace(`/vehicles/${vehicleId}`);
     }
   };
 
@@ -171,48 +171,46 @@ export default function UploadVehicle() {
   if (loading || isLoading) return <Loading />;
 
   return (
-    <>
-      <div className="flex items-center justify-center mt-10">
-        <Card className="w-[350px] my-5">
-          <CardHeader>
-            <CardTitle>Upload a Document</CardTitle>
-            <CardDescription>Upload your docs in one-click.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <DatePicker
-                  date={expiryDate}
-                  setDate={setExpiryDate}
-                  placeholder="Select expiry date"
-                />
-              </div>
-
-              <div className="flex flex-col space-y-1.5 text-sm text-muted-foreground">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  placeholder="Choose an image"
-                  className=""
-                  onChange={handleFileChange}
-                />
-              </div>
-
-              <div className="flex flex-col space-y-1.5">
-                <Selector
-                  placeholder="Select a document"
-                  label="Documents"
-                  setSelected={setType}
-                  options={vehicleOptions}
-                />
-              </div>
+    <div className="w-full h-[calc(100vh-100px)] flex items-center justify-center mt-10">
+      <Card className="w-[350px] my-5">
+        <CardHeader>
+          <CardTitle>Upload a Document</CardTitle>
+          <CardDescription>Upload your docs in one-click.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
+              <DatePicker
+                date={expiryDate}
+                setDate={setExpiryDate}
+                placeholder="Select expiry date"
+              />
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button onClick={handleUpload}>Upload</Button>
-          </CardFooter>
-        </Card>
-      </div>
-    </>
+
+            <div className="flex flex-col space-y-1.5 text-sm text-muted-foreground">
+              <Input
+                type="file"
+                accept="image/*"
+                placeholder="Choose an image"
+                className=""
+                onChange={handleFileChange}
+              />
+            </div>
+
+            <div className="flex flex-col space-y-1.5">
+              <Selector
+                placeholder="Select a document"
+                label="Documents"
+                setSelected={setType}
+                options={vehicleOptions}
+              />
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button onClick={handleUpload}>Upload</Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }
