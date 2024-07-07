@@ -2,6 +2,7 @@
 
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { User } from "@/lib/types";
 
 export default async function updateName(name: string) {
   try {
@@ -14,14 +15,13 @@ export default async function updateName(name: string) {
     return {
       success: true,
       message: "Username updated successfully",
-      data: updatedUser,
+      data: updatedUser as User,
     };
   } catch (error) {
     console.log(error);
     return {
       success: false,
       message: "Error updating user",
-      data: null,
     };
   }
 }

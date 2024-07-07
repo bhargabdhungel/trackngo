@@ -1,11 +1,6 @@
 import React from "react";
 import { FlipWords } from "./ui/flip-words";
 export default function CustomFlipWords() {
-  //   "efficiency"
-  // "flexibility"
-  // "control"
-  // "security"
-  // "precision"
   const words = [
     "efficiency",
     "flexibility",

@@ -2,6 +2,7 @@
 
 import prisma from "@/prisma/db";
 import authCheck from "../auth/authCheck";
+import { User } from "@/lib/types";
 
 export default async function getUserFromDB() {
   const userData = await authCheck();
@@ -15,14 +16,13 @@ export default async function getUserFromDB() {
     return {
       success: true,
       message: "User data fetched successfully",
-      data: user,
+      data: user as User,
     };
   } catch (error) {
     console.log(error);
     return {
       success: false,
       message: "Error fetching user",
-      data: null,
     };
   }
 }
