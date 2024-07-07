@@ -1,6 +1,9 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { UserNav } from "@/components/admin-panel/user-nav";
 import { SheetMenu } from "@/components/admin-panel/sheet-menu";
+import FilterInput from "@/app/(demo)/download/FilterInput";
+import Download from "@/app/(demo)/download/page";
+import DownloadButton from "@/app/(demo)/download/Download";
 
 interface NavbarProps {
   title: string;
@@ -16,6 +19,8 @@ export function Navbar({ title }: NavbarProps) {
           <h1 className="font-bold">{title}</h1>
         </div>
         <div className="flex flex-1 items-center space-x-2 justify-end">
+          <DownloadButton showIcon={true} />
+          <FilterInput />
           <ModeToggle />
           <UserNav />
         </div>

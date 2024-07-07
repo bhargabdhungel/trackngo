@@ -9,7 +9,20 @@ import { vehicleIdAtom } from "@/atoms/vehicle";
 import { driverIdAtom } from "@/atoms/driver";
 import { useMemo } from "react";
 import updateTrips from "@/lib/updateTrips";
-export default function DownloadButton() {
+import {
+  TooltipContent,
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ArrowDownToLine } from "lucide-react";
+import Loading from "@/app/loading";
+import { Toggle } from "@radix-ui/react-toggle";
+export default function DownloadButton({
+  showIcon = false,
+}: {
+  showIcon?: boolean;
+}) {
   const endDate = useRecoilValue(endDateAtom);
   const startDate = useRecoilValue(startDateAtom);
   const driverId = useRecoilValue(driverIdAtom);
@@ -41,5 +54,26 @@ export default function DownloadButton() {
     const fileName = `trips-${fileNameRandomId}.xlsx`;
     XLSX.writeFile(workbook, fileName);
   };
-  return <Button onClick={handleDownload}>Download</Button>;
+
+  if (isLoading) return null;
+
+  if (showIcon)
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle onClick={handleDownload}>
+              <ArrowDownToLine className="w-5 rounded-full" />
+            </Toggle>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Download</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+
+  return (
+    <Button onClick={handleDownload} className="w-24">
+      Download
+    </Button>
+  );
 }

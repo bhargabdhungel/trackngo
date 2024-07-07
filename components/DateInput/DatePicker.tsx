@@ -21,7 +21,7 @@ export function DatePicker({ date, setDate, placeholder }: DatePickerProps) {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild className="w-full">
         <Button
           variant="outline"
           className={cn(

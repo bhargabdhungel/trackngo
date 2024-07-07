@@ -21,6 +21,14 @@ import { endDateAtom, startDateAtom } from "@/atoms/trip";
 import useData from "@/hooks/useData";
 import getAllDrivers from "@/app/actions/driver/getAll";
 import getAllVehicles from "@/app/actions/vehicle/getAll";
+import { Settings2 } from "lucide-react";
+import { Toggle } from "@/components/ui/toggle";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 export default function FilterInput() {
   const date: Date = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -75,13 +83,19 @@ export default function FilterInput() {
   return (
     <Sheet open={open}>
       <SheetTrigger asChild>
-        <Button
-          variant="outline"
-          className="ml-2"
-          onClick={() => setOpen(true)}
-        >
-          Filter
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Toggle
+                className="rounded-full w-10"
+                onClick={() => setOpen(true)}
+              >
+                <Settings2 />
+              </Toggle>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Filter</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </SheetTrigger>
       <SheetContent side={"left"}>
         <SheetHeader>

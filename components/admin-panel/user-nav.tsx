@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 export function UserNav() {
   const { loading, userData } = useAuthClient();
   const router = useRouter();
-  if (loading) return <Loading />;
+  if (loading) return null;
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>

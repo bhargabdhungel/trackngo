@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import deleteDriver from "@/app/actions/driver/deleteDriver";
 import { toast } from "@/components/ui/use-toast";
 
@@ -94,20 +94,18 @@ export default function DriverWithId() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="w-full h-[calc(100vh-112px)]">
-      <div className="mt-5 flex justify-center">
-        <Profile
-          id={driver?.id!}
-          image={
-            driver?.documents?.find(
-              (document) => document.type === DriverDocumentType.IMAGE
-            )?.link
-          }
-          name={driver?.name}
-          contact={driver?.contact}
-          documents={driver?.documents}
-        />
-      </div>
+    <div className="w-full h-[calc(100vh-112px)] flex justify-center items-center">
+      <Profile
+        id={driver?.id!}
+        image={
+          driver?.documents?.find(
+            (document) => document.type === DriverDocumentType.IMAGE
+          )?.link
+        }
+        name={driver?.name}
+        contact={driver?.contact}
+        documents={driver?.documents}
+      />
     </div>
   );
 }

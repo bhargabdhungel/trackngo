@@ -5,8 +5,7 @@ import DownloadButton from "./Download";
 export default function Download() {
   return (
     <ContentLayout title="Download">
-      <div className="flex flex-col gap-4 w-full p-4">
-        <FilterInput />
+      <div className="flex justify-center items-center h-[calc(100vh-112px)]">
         <DownloadButton />
       </div>
     </ContentLayout>

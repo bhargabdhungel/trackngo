@@ -109,12 +109,12 @@ export const columns: ColumnDef<Trip>[] = [
             <DeleteTrip id={row.original.id!} />
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href={`/driver/${row.original.driverId}`} className="w-full">
+            <Link href={`/drivers/${row.original.driverId}`} className="w-full">
               Driver details
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href={`/vehicle/${row.original.busId}`} className="w-full">
+            <Link href={`/vehicles/${row.original.busId}`} className="w-full">
               Bus details
             </Link>
           </DropdownMenuItem>

@@ -135,7 +135,7 @@ export default function UploadDriver() {
   };
 
   return (
-    <>
+    <div className="w-full h-[calc(100vh-112px)] flex justify-center items-center">
       <Card className="w-[350px] my-5">
         <CardHeader>
           <CardTitle>Upload a Document</CardTitle>
@@ -176,6 +176,6 @@ export default function UploadDriver() {
           <Button onClick={handleUpload}>Upload</Button>
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
 }
