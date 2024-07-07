@@ -171,7 +171,7 @@ export default function UploadVehicle() {
   if (loading || isLoading) return <Loading />;
 
   return (
-    <div className="w-full h-[calc(100vh-100px)] flex items-center justify-center mt-10">
+    <div className="w-full h-[calc(100vh-112px)] flex items-center justify-center mt-10">
       <Card className="w-[350px] my-5">
         <CardHeader>
           <CardTitle>Upload a Document</CardTitle>
