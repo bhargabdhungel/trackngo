@@ -31,7 +31,7 @@ export default async function deleteDriver(id: number) {
       message: "Driver deleted successfully",
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       success: false,
       message: "Error deleting driver",

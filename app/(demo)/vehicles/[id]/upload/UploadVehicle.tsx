@@ -149,7 +149,7 @@ export default function UploadVehicle() {
 
       setLoading(false);
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         title: "Error uploading file",
         description: "Please try again later",

@@ -22,7 +22,7 @@ export default async function addTrip(trip: Trip) {
       data: res,
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       success: false,
       message: "Failed to add trip",

@@ -19,7 +19,7 @@ export default async function getUserFromDB() {
       data: user as User,
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       success: false,
       message: "Error fetching user",

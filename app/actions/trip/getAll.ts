@@ -59,7 +59,7 @@ export default async function getAllTrips({
       data: trips,
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       success: false,
       message: "Failed to fetch trips",

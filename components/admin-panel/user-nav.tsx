@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutGrid, LogOut, User } from "lucide-react";
+import { Github, LayoutGrid, LogOut, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -77,6 +77,17 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        <DropdownMenuItem className="cursor-pointer">
+          <Link
+            href="https://github.com/bhargabdhungel/trackngo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center"
+          >
+            <Github className="w-4 h-4 mr-3 text-muted-foreground" />
+            GitHub
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           className="hover:cursor-pointer"
           onClick={async () => {

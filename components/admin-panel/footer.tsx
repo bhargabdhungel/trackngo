@@ -33,7 +33,7 @@ export function Footer() {
           </Link>
           {" and "}
           <Link
-            href="https://x.com/bhargabdhungel"
+            href="https://github.com/pspriyanshu601"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium hover:underline hover:underline-offset-4"
@@ -41,15 +41,6 @@ export function Footer() {
             @pryanshusingh
           </Link>
           . The source code is available on{" "}
-          <Link
-            href="https://github.com/bhargabdhungel/trackngo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium hover:underline hover:underline-offset-4"
-          >
-            GitHub
-          </Link>
-          .
         </p>
       </div>
     </div>

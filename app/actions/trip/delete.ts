@@ -13,7 +13,7 @@ export default async function deleteTrip(id: number) {
       message: "Trip deleted",
     };
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return {
       success: false,
       message: "Error deleting trip",

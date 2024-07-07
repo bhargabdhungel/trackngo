@@ -18,7 +18,7 @@ export default async function updateName(name: string) {
       data: updatedUser as User,
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       success: false,
       message: "Error updating user",
